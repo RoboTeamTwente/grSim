@@ -48,7 +48,6 @@ PWorld::PWorld(dReal dt,dReal gravity,CGraphics* graphics)
     sur_matrix = NULL;
     //dAllocateODEDataForThread(dAllocateMaskAll);
     delta_time = dt;
-    g = graphics;
 }
 
 PWorld::~PWorld()
@@ -65,7 +64,7 @@ void PWorld::setGravity(dReal gravity)
 }
 
 void PWorld::handleCollisions(dGeomID o1, dGeomID o2)
-{   
+{
     PSurface* sur;
     int j=sur_matrix[*((int*)(dGeomGetData(o1)))][*((int*)(dGeomGetData(o2)))];
     if (j!=-1)
@@ -105,12 +104,11 @@ void PWorld::handleCollisions(dGeomID o1, dGeomID o2)
 }
 
 void PWorld::addObject(PObject* o)
-{      
+{
     int id = objects.count();
     o->id = id;
     if (o->world==NULL) o->world = world;
     if (o->space==NULL) o->space = space;
-    o->g = g;
     o->init();
     dGeomSetData(o->geom,(void*)(&(o->id)));
     objects.append(o);
@@ -127,11 +125,11 @@ void PWorld::initAllObjects()
             delete sur_matrix[i];
         delete sur_matrix;
         flag = true;
-    }    
+    }
     sur_matrix = new int* [c];
     for (int i=0;i<c;i++)
     {
-        sur_matrix[i] = new int [c];    
+        sur_matrix[i] = new int [c];
         for (int j=0;j<c;j++)
             sur_matrix[i][j] = -1;
     }
@@ -176,15 +174,8 @@ void PWorld::step(dReal dt)
     }
 }
 
-void PWorld::draw()
-{
-    for (int i=0;i<objects.count();i++)
-        if (objects[i]->getVisibility()) objects[i]->draw();
-}
-
 void PWorld::glinit()
 {
     for (int i=0;i<objects.count();i++)
         objects[i]->glinit();
 }
-

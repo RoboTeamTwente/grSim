@@ -149,9 +149,3 @@ void PObject::setMass(dReal mass)
 void PObject::glinit()
 {
 }
-
-void PObject::draw()
-{
-    g->setColor(m_red,m_green,m_blue,1);
-}
-

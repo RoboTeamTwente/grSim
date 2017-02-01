@@ -43,8 +43,7 @@ public:
     PSurface* findSurface(PObject* o1,PObject* o2);
     void step(dReal dt=-1);
     void glinit();
-    void draw();
-    void handleCollisions(dGeomID o1, dGeomID o2);    
+    void handleCollisions(dGeomID o1, dGeomID o2);
     dWorldID world;
     dSpaceID space;
     CGraphics* g;

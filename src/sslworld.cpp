@@ -447,7 +447,6 @@ void SSLWorld::step(dReal dt)
         robots[k]->step();
         robots[k]->selected = false;
     }
-    p->draw();
     g->drawSkybox(31,32,33,34,35,36);
 
     dMatrix3 R;

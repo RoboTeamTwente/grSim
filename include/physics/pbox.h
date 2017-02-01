@@ -31,7 +31,6 @@ public:
     virtual ~PBox();
     virtual void setMass(dReal mass);
     virtual void init();
-    virtual void draw();
 };
 
 #endif // PBOX_H

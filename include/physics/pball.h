@@ -30,7 +30,6 @@ public:
     virtual ~PBall();
     virtual void setMass(dReal mass);
     virtual void init();
-    virtual void draw();
 };
 
 #endif // PBALL_H

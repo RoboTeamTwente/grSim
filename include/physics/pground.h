@@ -30,7 +30,6 @@ public:
     PGround(dReal field_radius,dReal field_length,dReal field_width,dReal field_penalty_rad,dReal field_penalty_line_length,dReal field_penalty_point, dReal field_line_width, dReal field_defense_stretch,dReal field_defense_radius,int tex_id);
     virtual ~PGround();
     virtual void init();
-    virtual void draw();
 };
 
 #endif // PGROUND_H

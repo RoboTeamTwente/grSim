@@ -38,15 +38,6 @@ void PGround::init()
     geom = dCreatePlane (space,0,0,1,0);
 }
 
-void PGround::draw()
-{
-    PObject::draw();
-    g->useTexture(tex);
-    g->drawGround();
-    g->noTexture();
-    g->drawSSLGround(rad,len,wid,prad,plen,ppoint,lwidth,dstretch,dradius,0.0001);
-}
-
 PGround::~PGround()
 {
 }

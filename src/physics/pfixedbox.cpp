@@ -35,10 +35,3 @@ void PFixedBox::init()
     geom = dCreateBox (space,m_w,m_h,m_l);
     initPosGeom();
 }
-
-void PFixedBox::draw()
-{
-    PObject::draw();
-    dReal dim[3] = {m_w,m_h,m_l};
-    g->drawBox (dGeomGetPosition(geom),dGeomGetRotation(geom),dim);
-}

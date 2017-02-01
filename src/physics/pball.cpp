@@ -21,7 +21,7 @@ Copyright (C) 2011, Parsian Robotic Center (eew.aut.ac.ir/~parsian/grsim)
 PBall::PBall(dReal x,dReal y,dReal z,dReal radius,dReal mass,dReal red,dReal green,dReal blue)
         : PObject(x,y,z,red,green,blue,mass)
 {
-    m_radius = radius;    
+    m_radius = radius;
 }
 
 PBall::~PBall()
@@ -45,10 +45,4 @@ void PBall::setMass(dReal mass)
     dMass m;
     dMassSetSphereTotal(&m,m_mass,m_radius);
     dBodySetMass (body,&m);
-}
-
-void PBall::draw()
-{
-  PObject::draw();
-  g->drawSphere(dBodyGetPosition(body),dBodyGetRotation(body),m_radius);
 }

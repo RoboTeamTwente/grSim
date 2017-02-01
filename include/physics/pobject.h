@@ -50,13 +50,11 @@ public:
     virtual void setMass(dReal mass);
     virtual void init()=0;
     virtual void glinit();
-    virtual void draw();
 
     dBodyID body;
     dGeomID geom;
     dWorldID world;
     dSpaceID space;
-    CGraphics *g;
     int tag;
     int id;
 };

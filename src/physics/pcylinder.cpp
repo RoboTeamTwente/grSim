@@ -22,7 +22,7 @@ PCylinder::PCylinder(dReal x,dReal y,dReal z,dReal radius,dReal length,dReal mas
           : PObject(x,y,z,red,green,blue,mass)
 {
     m_radius = radius;
-    m_length = length;    
+    m_length = length;
     m_texid = texid;
     m_robot = robot;
 }
@@ -62,7 +62,7 @@ void PCylinder::init()
       dReal r = m_radius;
 
       dReal ny=1,nz=0,tmp;
-      int v=0,f=0;      
+      int v=0,f=0;
       int i;
       for (i=0; i<=n; i++) {
           if (i>2 && i<n-2)
@@ -75,7 +75,7 @@ void PCylinder::init()
               vertices[v][2] = -l;v++;
               indices[f] = v;f++;
               indices[f] = v-2;f++;
-              indices[f] = v-1;f++;              
+              indices[f] = v-1;f++;
               indices[f] = v-1;f++;
               indices[f] = v;f++;
               indices[f] = v+1;f++;
@@ -85,7 +85,7 @@ void PCylinder::init()
         // rotate ny,nz
         tmp = ca*ny - sa*nz;
         nz = sa*ny + ca*nz;
-        ny = tmp;      
+        ny = tmp;
 
       ny=1; nz=0;		  // normal vector = (0,ny,nz)
       glBegin (GL_TRIANGLE_FAN);
@@ -126,31 +126,11 @@ void PCylinder::init()
 //      }
       dGeomTriMeshDataBuildSimple(g, (dReal*) vertices, vertexcount, indices, indexcount);
       geom = dCreateTriMesh(0,g,NULL,NULL,NULL);
-  }  
+  }
   else */
   {
     geom = dCreateCylinder(0,m_radius,m_length);
   }
   dGeomSetBody (geom,body);
   dSpaceAdd (space,geom);
-}
-
-void PCylinder::draw()
-{
-    PObject::draw();    
-    if (m_texid==-1)
-        g->drawCylinder(dBodyGetPosition(body),dBodyGetRotation(body),m_length,m_radius);
-    else
-        g->drawCylinder_TopTextured(dBodyGetPosition(body),dBodyGetRotation(body),m_length,m_radius,m_texid,m_robot);
-
-/*    glColor3f(1.0, 1.0, 1.0);
-    glPushMatrix();
-
-        g->setTransform(dBodyGetPosition(body),dBodyGetRotation(body));
-           glScaled(m_radius, m_radius, m_radius);
-           glColor3d(0.1, 0.1, 0.1);
-           glRasterPos3f(-0.25, 1.5, 0.0);
-           //glutStrokeCharacter(GLUT_STROKE_ROMAN, c);
-           glutBitmapCharacter(GLUT_BITMAP_8_BY_13,c);
-    glPopMatrix();*/
 }
