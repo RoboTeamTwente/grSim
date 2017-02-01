@@ -72,11 +72,7 @@ public slots:
 private:
     int getInterval();
     QTimer *timer;
-#ifndef QT5
-    QWorkspace* workspace;
-#else
-    QMdiArea* workspace;
-#endif
+
     GLWidget *glwidget;
     ConfigWidget *configwidget;
     ConfigDockWidget *dockconfig;

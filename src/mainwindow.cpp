@@ -60,14 +60,6 @@ MainWindow::MainWindow(QWidget *parent)
     current_dir = dir.path();
     /* Status Logger */
 
-    /* Init Workspace */
-#ifdef QT5
-    workspace = new QMdiArea(this);
-#else
-    workspace = new QWorkspace(this);
-#endif
-    setCentralWidget(workspace);
-
     /* Widgets */
 
     configwidget = new ConfigWidget();
@@ -156,13 +148,6 @@ MainWindow::MainWindow(QWidget *parent)
     robotMenu->addMenu(glwidget->yellowRobotsMenu);
 
     viewMenu->addMenu(glwidget->cameraMenu);
-
-
-#ifdef QT5
-    workspace->addSubWindow(glwidget, Qt::CustomizeWindowHint | Qt::WindowTitleHint | Qt::WindowSystemMenuHint | Qt::WindowMinimizeButtonHint | Qt::WindowMaximizeButtonHint);
-#else
-   workspace->addWindow(glwidget, Qt::CustomizeWindowHint | Qt::WindowTitleHint | Qt::WindowSystemMenuHint | Qt::WindowMinimizeButtonHint | Qt::WindowMaximizeButtonHint);
-#endif
 
     glwidget->setWindowState(Qt::WindowMaximized);
 
@@ -377,11 +362,7 @@ void MainWindow::toggleFullScreen(bool a)
     }
     else {
         view->close();
-#ifdef QT5
-        workspace->addSubWindow(glwidget, Qt::CustomizeWindowHint | Qt::WindowTitleHint | Qt::WindowSystemMenuHint | Qt::WindowMinimizeButtonHint | Qt::WindowMaximizeButtonHint);
-#else
-        workspace->addWindow(glwidget, Qt::CustomizeWindowHint | Qt::WindowTitleHint | Qt::WindowSystemMenuHint | Qt::WindowMinimizeButtonHint | Qt::WindowMaximizeButtonHint);
-#endif
+
         glwidget->show();
         glwidget->resize(lastSize);
         glwidget->fullScreen = false;
