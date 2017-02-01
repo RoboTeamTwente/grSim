@@ -111,22 +111,7 @@ MainWindow::MainWindow(QWidget *parent)
     QMenu *simulatorMenu = new QMenu("&Simulator");
     menuBar()->addMenu(simulatorMenu);
     QMenu *robotMenu = new QMenu("&Robot");
-    QMenu *ballMenu = new QMenu("&Ball");
     simulatorMenu->addMenu(robotMenu);
-    simulatorMenu->addMenu(ballMenu);
-
-    QMenu *helpMenu = new QMenu("&Help");
-    QAction* aboutMenu = new QAction("&About", helpMenu);
-    menuBar()->addMenu(helpMenu);
-    helpMenu->addAction(aboutMenu);
-
-    ballMenu->addAction(tr("Put on Center"))->setShortcut(QKeySequence("Ctrl+0"));
-    ballMenu->addAction(tr("Put on Corner 1"))->setShortcut(QKeySequence("Ctrl+1"));
-    ballMenu->addAction(tr("Put on Corner 2"))->setShortcut(QKeySequence("Ctrl+2"));
-    ballMenu->addAction(tr("Put on Corner 3"))->setShortcut(QKeySequence("Ctrl+3"));
-    ballMenu->addAction(tr("Put on Corner 4"))->setShortcut(QKeySequence("Ctrl+4"));
-    ballMenu->addAction(tr("Put on Penalty 1"))->setShortcut(QKeySequence("Ctrl+5"));
-    ballMenu->addAction(tr("Put on Penalty 2"))->setShortcut(QKeySequence("Ctrl+6"));
 
     robotMenu->addMenu(glwidget->blueRobotsMenu);
     robotMenu->addMenu(glwidget->yellowRobotsMenu);
@@ -147,10 +132,8 @@ MainWindow::MainWindow(QWidget *parent)
     QObject::connect(showconfig, SIGNAL(triggered(bool)), this, SLOT(showHideConfig(bool)));
     QObject::connect(glwidget, SIGNAL(closeSignal(bool)), this, SLOT(showHideSimulator(bool)));
     QObject::connect(dockconfig, SIGNAL(closeSignal(bool)), this, SLOT(showHideConfig(bool)));
-    QObject::connect(ballMenu,SIGNAL(triggered(QAction*)),this,SLOT(ballMenuTriggered(QAction*)));
     QObject::connect(glwidget,SIGNAL(toggleFullScreen(bool)),this,SLOT(toggleFullScreen(bool)));
     QObject::connect(glwidget->ssl, SIGNAL(fpsChanged(int)), this, SLOT(customFPS(int)));
-    QObject::connect(aboutMenu, SIGNAL(triggered()), this, SLOT(showAbout()));
     //config related signals
     QObject::connect(configwidget->v_BallMass.get(), SIGNAL(wasEdited(VarPtr)), this, SLOT(changeBallMass()));
     QObject::connect(configwidget->v_BallBounce.get(), SIGNAL(wasEdited(VarPtr)), this, SLOT(changeBallGroundSurface()));
@@ -291,20 +274,6 @@ void MainWindow::restartSimulator()
 
 }
 
-void MainWindow::ballMenuTriggered(QAction* act)
-{
-    dReal l = configwidget->Field_Length()/2.0;
-    dReal w = configwidget->Field_Width()/2.0;
-    dReal p = l - configwidget->Field_Penalty_Point();
-    if (act->text()==tr("Put on Center")) glwidget->putBall(0,0);
-    else if (act->text()==tr("Put on Corner 1")) glwidget->putBall(-l,-w);
-    else if (act->text()==tr("Put on Corner 2")) glwidget->putBall(-l, w);
-    else if (act->text()==tr("Put on Corner 3")) glwidget->putBall( l,-w);
-    else if (act->text()==tr("Put on Corner 4")) glwidget->putBall( l, w);
-    else if (act->text()==tr("Put on Penalty 1")) glwidget->putBall( p, 0);
-    else if (act->text()==tr("Put on Penalty 2")) glwidget->putBall(-p, 0);
-}
-
 void MainWindow::toggleFullScreen(bool a)
 {
     if (a)
@@ -346,13 +315,6 @@ void MainWindow::takeSnapshotToClipboard()
     QPixmap p(glwidget->renderPixmap(glwidget->size().width(),glwidget->size().height(),false));
     QClipboard* b = QApplication::clipboard();
     b->setPixmap(p);
-}
-
-void MainWindow::showAbout()
-{
-    QString title = QString("grSim v0.9 - Build r1240");
-    QString text = QString("grSim - RoboCup Small Size Soccer Robots Simulator\n\n(C) 2011 - Parsian Robotic Center\nhttp://eew.aut.ac.ir/~parsian/grsim\n\ngrSim is free software released under the terms of GNU GPL v3");
-    QMessageBox::about(this, title, text);
 }
 
 

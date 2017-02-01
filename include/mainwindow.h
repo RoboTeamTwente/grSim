@@ -55,14 +55,12 @@ public slots:
     void changeTimer();
 
     void restartSimulator();
-    void ballMenuTriggered(QAction* act);
     void toggleFullScreen(bool);
     void setCurrentRobotPosition();
     void takeSnapshot();
     void takeSnapshotToClipboard();
 
     void customFPS(int fps);
-    void showAbout();
     void reconnectCommandSocket();
     void reconnectYellowStatusSocket();
     void reconnectBlueStatusSocket();
