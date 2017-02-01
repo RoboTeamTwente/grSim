@@ -36,7 +36,7 @@ void nearCallback (void *data, dGeomID o1, dGeomID o2)
 }
 
 
-PWorld::PWorld(dReal dt,dReal gravity,CGraphics* graphics)
+PWorld::PWorld(dReal dt,dReal gravity)
 {
     //dInitODE2(0);
     dInitODE();
@@ -172,10 +172,4 @@ void PWorld::step(dReal dt)
     {
         //qDebug() << "Some Error Happened;";
     }
-}
-
-void PWorld::glinit()
-{
-    for (int i=0;i<objects.count();i++)
-        objects[i]->glinit();
 }

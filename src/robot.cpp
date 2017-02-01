@@ -33,7 +33,7 @@ Robot::Wheel::Wheel(Robot* robot,int _id,dReal ang,dReal ang2,int wheeltexid)
     dReal centerx = x+rad*cos(ang2);
     dReal centery = y+rad*sin(ang2);
     dReal centerz = z-rob->cfg->robotSettings.RobotHeight*0.5+rob->cfg->robotSettings.WheelRadius-rob->cfg->robotSettings.BottomHeight;
-    cyl = new PCylinder(centerx,centery,centerz,rob->cfg->robotSettings.WheelRadius,rob->cfg->robotSettings.WheelThickness,rob->cfg->robotSettings.WheelMass,0.9,0.9,0.9,wheeltexid);
+    cyl = new PCylinder(centerx,centery,centerz,rob->cfg->robotSettings.WheelRadius,rob->cfg->robotSettings.WheelThickness,rob->cfg->robotSettings.WheelMass,wheeltexid);
     cyl->setRotation(-sin(ang),cos(ang),0,M_PI*0.5);
     cyl->setBodyRotation(-sin(ang),cos(ang),0,M_PI*0.5,true);       //set local rotation matrix
     cyl->setBodyPosition(centerx-x,centery-y,centerz-z,true);       //set local position vector
@@ -72,7 +72,7 @@ Robot::Kicker::Kicker(Robot* robot)
     dReal centerx = x+(rob->cfg->robotSettings.RobotCenterFromKicker+rob->cfg->robotSettings.KickerThickness);
     dReal centery = y;
     dReal centerz = z-(rob->cfg->robotSettings.RobotHeight)*0.5f+rob->cfg->robotSettings.WheelRadius-rob->cfg->robotSettings.BottomHeight+rob->cfg->robotSettings.KickerZ;
-    box = new PBox(centerx,centery,centerz,rob->cfg->robotSettings.KickerThickness,rob->cfg->robotSettings.KickerWidth,rob->cfg->robotSettings.KickerHeight,rob->cfg->robotSettings.KickerMass,0.9,0.9,0.9);
+    box = new PBox(centerx,centery,centerz,rob->cfg->robotSettings.KickerThickness,rob->cfg->robotSettings.KickerWidth,rob->cfg->robotSettings.KickerHeight,rob->cfg->robotSettings.KickerMass);
     box->setBodyPosition(centerx-x,centery-y,centerz-z,true);
     box->space = rob->space;
 
@@ -96,13 +96,11 @@ void Robot::Kicker::step()
 {
     if (kicking)
     {
-        box->setColor(1,0.3,0);
         kickstate--;
         if (kickstate<=0) kicking = false;
     }
     else if (rolling!=0)
     {
-        box->setColor(1,0.7,0);
         if (isTouchingBall())
         {
             dReal fx,fy,fz;
@@ -126,7 +124,6 @@ void Robot::Kicker::step()
             dBodyAddTorque(rob->getBall()->body,yy*fx*rob->cfg->robotSettings.RollerPerpendicularTorqueFactor,yy*fy*rob->cfg->robotSettings.RollerPerpendicularTorqueFactor,0);
         }
     }
-    else box->setColor(0.9,0.9,0.9);
 }
 
 bool Robot::Kicker::isTouchingBall()
@@ -163,7 +160,7 @@ void Robot::Kicker::toggleRoller()
 }
 
 void Robot::Kicker::kick(dReal kickspeedx, dReal kickspeedz)
-{    
+{
     dReal dx,dy,dz;
     dReal vx,vy,vz;
     rob->chassis->getBodyDirection(dx,dy,dz);dz = 0;
@@ -186,11 +183,8 @@ void Robot::Kicker::kick(dReal kickspeedx, dReal kickspeedz)
     kickstate = 10;
 }
 
-Robot::Robot(PWorld* world,PBall *ball,ConfigWidget* _cfg,dReal x,dReal y,dReal z,dReal r,dReal g,dReal b,int rob_id,int wheeltexid,int dir)
-{      
-    m_r = r;
-    m_g = g;
-    m_b = b;
+Robot::Robot(PWorld* world,PBall *ball,ConfigWidget* _cfg,dReal x,dReal y,dReal z,int rob_id,int wheeltexid,int dir)
+{
     m_x = x;
     m_y = y;
     m_z = z;
@@ -202,12 +196,11 @@ Robot::Robot(PWorld* world,PBall *ball,ConfigWidget* _cfg,dReal x,dReal y,dReal 
 
     space = w->space;
 
-    chassis = new PCylinder(x,y,z,cfg->robotSettings.RobotRadius,cfg->robotSettings.RobotHeight,cfg->robotSettings.BodyMass*0.99f,r,g,b,rob_id,true);
+    chassis = new PCylinder(x,y,z,cfg->robotSettings.RobotRadius,cfg->robotSettings.RobotHeight,cfg->robotSettings.BodyMass*0.99f,rob_id,true);
     chassis->space = space;
     w->addObject(chassis);
 
-    dummy   = new PBall(x,y,z,cfg->robotSettings.RobotCenterFromKicker,cfg->robotSettings.BodyMass*0.01f,0,0,0);
-    dummy->setVisibility(false);
+    dummy   = new PBall(x,y,z,cfg->robotSettings.RobotCenterFromKicker,cfg->robotSettings.BodyMass*0.01f);
     dummy->space = space;
     w->addObject(dummy);
 
@@ -246,7 +239,7 @@ void normalizeVector(dReal& x,dReal& y,dReal& z)
 }
 
 void Robot::step()
-{    
+{
     if (on)
     {
         if (firsttime)
@@ -273,52 +266,6 @@ void Robot::step()
         }
     }
     last_state = on;
-}
-
-void Robot::drawLabel()
-{
-    glPushMatrix();
-    dVector3 pos;
-    dReal fr_r,fr_b,fr_n;w->g->getFrustum(fr_r,fr_b,fr_n);
-    const dReal txtWidth = 12.0f*fr_r/(dReal)w->g->getWidth();
-    const dReal txtHeight = 24.0f*fr_b/(dReal)w->g->getHeight();
-    pos[0] = dBodyGetPosition(chassis->body)[0];
-    pos[1] = dBodyGetPosition(chassis->body)[1];
-    pos[2] = dBodyGetPosition(chassis->body)[2];    
-    dReal xyz[3],hpr[3];
-    w->g->getViewpoint(xyz,hpr);
-    dReal ax = -pos[0]+xyz[0];
-    dReal ay = -pos[1]+xyz[1];
-    dReal az = -pos[2]+xyz[2];
-    dReal fx,fy,fz;
-    dReal rx,ry,rz;
-    w->g->getCameraForward(fx,fy,fz);
-    w->g->getCameraRight(rx,ry,rz);
-    normalizeVector(fx,fy,fz);
-    normalizeVector(rx,ry,rz);
-    dReal zz = fx*ax + fy*ay + fz*az;
-    dReal zfact = zz/fr_n;
-    pos[2] += cfg->robotSettings.RobotHeight*0.5f + cfg->robotSettings.BottomHeight + cfg->robotSettings.WheelRadius + txtHeight*zfact;
-    dMatrix3 rot;
-    dRFromAxisAndAngle(rot,0,0,0,0);
-    dReal tx = fy*rz-ry*fz;
-    dReal ty = rx*fz-fx*rz;
-    dReal tz = fx*ry-fy*rx;
-    w->g->setTransform(pos,rot);
-    w->g->useTexture((m_rob_id-1) + 11 + 10*((on)?0:1));
-    glShadeModel (GL_FLAT);
-    glDisable(GL_LIGHTING);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
-    glBegin(GL_QUADS);
-    glTexCoord2f(1,1);glVertex3f( txtWidth*rx*zfact +txtHeight*tx*zfact, txtWidth*ry*zfact +txtHeight*ty*zfact, txtWidth*rz*zfact +txtHeight*tz*zfact);
-    glTexCoord2f(0,1);glVertex3f(-txtWidth*rx*zfact +txtHeight*tx*zfact,-txtWidth*ry*zfact +txtHeight*ty*zfact,-txtWidth*rz*zfact +txtHeight*tz*zfact);
-    glTexCoord2f(0,0);glVertex3f(-txtWidth*rx*zfact -txtHeight*tx*zfact,-txtWidth*ry*zfact -txtHeight*ty*zfact,-txtWidth*rz*zfact -txtHeight*tz*zfact);
-    glTexCoord2f(1,0);glVertex3f( txtWidth*rx*zfact -txtHeight*tx*zfact, txtWidth*ry*zfact -txtHeight*ty*zfact, txtWidth*rz*zfact -txtHeight*tz*zfact);
-    glEnd();
-    glDisable(GL_BLEND);
-    w->g->noTexture();
-    glPopMatrix();
 }
 
 void Robot::resetSpeeds()
@@ -439,4 +386,3 @@ void Robot::incSpeed(int i,dReal v)
     if (!((i>=4) || (i<0)))
         wheels[i]->speed += v;
 }
-

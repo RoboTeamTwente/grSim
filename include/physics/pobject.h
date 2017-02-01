@@ -26,30 +26,24 @@ class PObject
 private:
     bool isQSet;
 protected:
-    dReal m_x,m_y,m_z,m_red,m_green,m_blue;
+    dReal m_x,m_y,m_z;
     dReal m_mass;
     dMatrix3 local_Rot;
     dVector3 local_Pos;
     dQuaternion q;
     void initPosBody();
     void initPosGeom();
-    bool visible;
 public:
-    PObject(dReal x,dReal y,dReal z,dReal red,dReal green,dReal blue,dReal mass);
+    PObject(dReal x,dReal y,dReal z,dReal mass);
     virtual ~PObject();
     void setRotation(dReal x_axis,dReal y_axis,dReal z_axis,dReal ang); //Must be called before init()
     void setBodyPosition(dReal x,dReal y,dReal z,bool local=false);
     void setBodyRotation(dReal x_axis,dReal y_axis,dReal z_axis,dReal ang,bool local=false);
     void getBodyPosition(dReal &x,dReal &y,dReal &z,bool local=false);
     void getBodyDirection(dReal &x,dReal &y,dReal &z);
-    void getBodyRotation(dMatrix3 r,bool local=false);
-    void setVisibility(bool v);
-    void setColor(dReal r,dReal g,dReal b);
-    void getColor(dReal& r,dReal& g,dReal& b);
-    bool getVisibility();
+    void getBodyRotation(dMatrix3 r,bool local=false);;
     virtual void setMass(dReal mass);
     virtual void init()=0;
-    virtual void glinit();
 
     dBodyID body;
     dGeomID geom;

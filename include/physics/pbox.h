@@ -27,7 +27,7 @@ class PBox : public PObject
 private:
     dReal m_w,m_h,m_l;
 public:
-    PBox(dReal x,dReal y,dReal z,dReal w,dReal h,dReal l,dReal mass,dReal r,dReal g,dReal b);
+    PBox(dReal x,dReal y,dReal z,dReal w,dReal h,dReal l,dReal mass);
     virtual ~PBox();
     virtual void setMass(dReal mass);
     virtual void init();

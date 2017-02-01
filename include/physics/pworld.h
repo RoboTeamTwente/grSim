@@ -34,7 +34,7 @@ private:
     int **sur_matrix;
     int objects_count;
 public:
-    PWorld(dReal dt,dReal gravity,CGraphics* graphics);
+    PWorld(dReal dt,dReal gravity);
     ~PWorld();
     void setGravity(dReal gravity);
     void addObject(PObject* o);
@@ -42,11 +42,9 @@ public:
     PSurface* createSurface(PObject* o1,PObject* o2);
     PSurface* findSurface(PObject* o1,PObject* o2);
     void step(dReal dt=-1);
-    void glinit();
     void handleCollisions(dGeomID o1, dGeomID o2);
     dWorldID world;
     dSpaceID space;
-    CGraphics* g;
 };
 
 typedef bool PSurfaceCallback(dGeomID o1,dGeomID o2,PSurface* s);

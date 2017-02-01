@@ -153,8 +153,8 @@ SSLWorld::SSLWorld(QGLWidget* parent,ConfigWidget* _cfg,RobotsFomation *form1,Ro
     g = new CGraphics(parent);
     g->setSphereQuality(1);
     g->setViewpoint(0,-(cfg->Field_Width()+cfg->Field_Margin()*2.0f)/2.0f,3,90,-45,0);
-    p = new PWorld(0.05,9.81f,g);
-    ball = new PBall (0,0,0.5,cfg->BallRadius(),cfg->BallMass(), 1,0.7,0);
+    p = new PWorld(0.05,9.81f);
+    ball = new PBall (0,0,0.5,cfg->BallRadius(),cfg->BallMass());
 
     ground = new PGround(cfg->Field_Rad(),cfg->Field_Length(),cfg->Field_Width(),cfg->Field_Penalty_Rad(),cfg->Field_Penalty_Line(),cfg->Field_Penalty_Point(),cfg->Field_Line_Width(),cfg->Field_Defense_Stretch(),cfg->Field_Defense_Rad(),0);
     ray = new PRay(50);
@@ -172,20 +172,20 @@ SSLWorld::SSLWorld(QGLWidget* parent,ConfigWidget* _cfg,RobotsFomation *form1,Ro
     const double tone = 1.0;
 
     walls[0] = new PFixedBox(thick/2, pos_y, pos_z,
-                             siz_x, thick, siz_z,
-                             tone, tone, tone);
+                             siz_x, thick, siz_z
+                             );
 
     walls[1] = new PFixedBox(-thick/2, -pos_y, pos_z,
-                             siz_x, thick, siz_z,
-                             tone, tone, tone);
+                             siz_x, thick, siz_z
+                             );
 
     walls[2] = new PFixedBox(pos_x, -thick/2, pos_z,
-                             thick, siz_y, siz_z,
-                             tone, tone, tone);
+                             thick, siz_y, siz_z
+                             );
 
     walls[3] = new PFixedBox(-pos_x, thick/2, pos_z,
-                             thick, siz_y, siz_z,
-                             tone, tone, tone);
+                             thick, siz_y, siz_z
+                             );
 
     // Goal walls
 
@@ -199,28 +199,28 @@ SSLWorld::SSLWorld(QGLWidget* parent,ConfigWidget* _cfg,RobotsFomation *form1,Ro
     const double gpos2_x = (cfg->Field_Length() + gsiz_x) / 2.0;
 
     walls[4] = new PFixedBox(gpos_x, 0.0, gpos_z,
-                             gthick, gsiz_y, gsiz_z,
-                             tone, tone, tone);
+                             gthick, gsiz_y, gsiz_z
+                             );
 
     walls[5] = new PFixedBox(gpos2_x, -gpos_y, gpos_z,
-                             gsiz_x, gthick, gsiz_z,
-                             tone, tone, tone);
+                             gsiz_x, gthick, gsiz_z
+                             );
 
     walls[6] = new PFixedBox(gpos2_x, gpos_y, gpos_z,
-                             gsiz_x, gthick, gsiz_z,
-                             tone, tone, tone);
+                             gsiz_x, gthick, gsiz_z
+                             );
 
     walls[7] = new PFixedBox(-gpos_x, 0.0, gpos_z,
-                             gthick, gsiz_y, gsiz_z,
-                             tone, tone, tone);
+                             gthick, gsiz_y, gsiz_z
+                             );
 
     walls[8] = new PFixedBox(-gpos2_x, -gpos_y, gpos_z,
-                             gsiz_x, gthick, gsiz_z,
-                             tone, tone, tone);
+                             gsiz_x, gthick, gsiz_z
+                             );
 
     walls[9] = new PFixedBox(-gpos2_x, gpos_y, gpos_z,
-                             gsiz_x, gthick, gsiz_z,
-                             tone, tone, tone);
+                             gsiz_x, gthick, gsiz_z
+                             );
 
     p->addObject(ground);
     p->addObject(ball);
@@ -232,10 +232,10 @@ SSLWorld::SSLWorld(QGLWidget* parent,ConfigWidget* _cfg,RobotsFomation *form1,Ro
 
     cfg->robotSettings = cfg->blueSettings;
     for (int k=0;k<ROBOT_COUNT;k++)
-        robots[k] = new Robot(p,ball,cfg,-form1->x[k],form1->y[k],ROBOT_START_Z(cfg),ROBOT_GRAY,ROBOT_GRAY,ROBOT_GRAY,k+1,wheeltexid,1);
+        robots[k] = new Robot(p,ball,cfg,-form1->x[k],form1->y[k],ROBOT_START_Z(cfg),k+1,wheeltexid,1);
     cfg->robotSettings = cfg->yellowSettings;
     for (int k=0;k<ROBOT_COUNT;k++)
-        robots[k+ROBOT_COUNT] = new Robot(p,ball,cfg,form2->x[k],form2->y[k],ROBOT_START_Z(cfg),ROBOT_GRAY,ROBOT_GRAY,ROBOT_GRAY,k+ROBOT_COUNT+1,wheeltexid,-1);//XXX
+        robots[k+ROBOT_COUNT] = new Robot(p,ball,cfg,form2->x[k],form2->y[k],ROBOT_START_Z(cfg),k+ROBOT_COUNT+1,wheeltexid,-1);//XXX
 
     p->initAllObjects();
 
@@ -368,9 +368,6 @@ void SSLWorld::glinit()
 
     // The wheel texture
     g->loadTexture(new QImage(":/wheel.png"));
-
-    // Init at last
-    p->glinit();
 }
 
 void SSLWorld::step(dReal dt)
@@ -437,9 +434,7 @@ void SSLWorld::step(dReal dt)
                 best_k = k;
             }
         }
-        robots[k]->chassis->setColor(ROBOT_GRAY,ROBOT_GRAY,ROBOT_GRAY);
     }
-    if (best_k>=0) robots[best_k]->chassis->setColor(ROBOT_GRAY*2,ROBOT_GRAY*1.5,ROBOT_GRAY*1.5);
     selected = best_k;
     ball->tag = -1;
     for (int k=0;k<ROBOT_COUNT * 2;k++)

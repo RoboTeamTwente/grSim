@@ -26,7 +26,7 @@ class PBall : public PObject
 private:
     dReal m_radius;
 public:
-    PBall(dReal x,dReal y,dReal z,dReal radius,dReal mass,dReal red,dReal green,dReal blue);
+    PBall(dReal x,dReal y,dReal z,dReal radius,dReal mass);
     virtual ~PBall();
     virtual void setMass(dReal mass);
     virtual void init();

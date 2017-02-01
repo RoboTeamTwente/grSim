@@ -18,8 +18,8 @@ Copyright (C) 2011, Parsian Robotic Center (eew.aut.ac.ir/~parsian/grsim)
 
 #include "pbox.h"
 
-PBox::PBox(dReal x,dReal y,dReal z,dReal w,dReal h,dReal l,dReal mass,dReal r,dReal g,dReal b)
-       : PObject(x,y,z,r,g,b,mass)
+PBox::PBox(dReal x,dReal y,dReal z,dReal w,dReal h,dReal l,dReal mass)
+       : PObject(x,y,z,mass)
 {
 
     m_w = w;

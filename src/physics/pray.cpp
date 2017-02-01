@@ -19,7 +19,7 @@ Copyright (C) 2011, Parsian Robotic Center (eew.aut.ac.ir/~parsian/grsim)
 #include "pray.h"
 
 PRay::PRay(dReal length)
-         : PObject(0,0,0,0,0,0,0)
+         : PObject(0,0,0,0)
 {
     _length = length;
 }

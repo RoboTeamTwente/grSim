@@ -18,8 +18,8 @@ Copyright (C) 2011, Parsian Robotic Center (eew.aut.ac.ir/~parsian/grsim)
 
 #include "pfixedbox.h"
 
-PFixedBox::PFixedBox(dReal x,dReal y,dReal z,dReal w,dReal h,dReal l,dReal r,dReal g,dReal b)
-       : PObject(x,y,z,r,g,b,0)
+PFixedBox::PFixedBox(dReal x,dReal y,dReal z,dReal w,dReal h,dReal l)
+       : PObject(x,y,z,0)
 {
     m_w = w;
     m_h = h;

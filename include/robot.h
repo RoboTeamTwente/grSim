@@ -36,17 +36,17 @@ class Robot
     int m_rob_id;
     bool firsttime;
     bool last_state;
-public:    
+public:
     ConfigWidget* cfg;
     dSpaceID space;
     PCylinder* chassis;
     PBall* dummy;
     dJointID dummy_to_chassis;
-    PBox* boxes[3];    
+    PBox* boxes[3];
     bool on;
     //these values are not controled by this class
     bool selected;
-    dReal select_x,select_y,select_z;    
+    dReal select_x,select_y,select_z;
     QImage *img,*number;
     class Wheel
     {
@@ -80,10 +80,9 @@ public:
         Robot* rob;
     } *kicker;
 
-    Robot(PWorld* world,PBall* ball,ConfigWidget* _cfg,dReal x,dReal y,dReal z,dReal r,dReal g,dReal b,int rob_id,int wheeltexid,int dir);
+    Robot(PWorld* world,PBall* ball,ConfigWidget* _cfg,dReal x,dReal y,dReal z,int rob_id,int wheeltexid,int dir);
     ~Robot();
     void step();
-    void drawLabel();
     void setSpeed(int i,dReal s); //i = 0,1,2,3
     void setSpeed(dReal vx, dReal vy, dReal vw);
     dReal getSpeed(int i);

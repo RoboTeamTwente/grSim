@@ -18,7 +18,7 @@ Copyright (C) 2011, Parsian Robotic Center (eew.aut.ac.ir/~parsian/grsim)
 
 #include "pobject.h"
 
-PObject::PObject(dReal x,dReal y,dReal z,dReal red,dReal green,dReal blue,dReal mass)
+PObject::PObject(dReal x,dReal y,dReal z,dReal mass)
 {
     geom = NULL;
     body = NULL;
@@ -27,37 +27,9 @@ PObject::PObject(dReal x,dReal y,dReal z,dReal red,dReal green,dReal blue,dReal 
     m_x = x;
     m_y = y;
     m_z = z;
-    m_red = red;
-    m_green = green;
-    m_blue = blue;
     m_mass = mass;
-    visible = true;
     isQSet = false;
     tag = 0;
-}
-
-void PObject::setVisibility(bool v)
-{
-    visible = v;
-}
-
-bool PObject::getVisibility()
-{
-    return visible;
-}
-
-void PObject::setColor(dReal r,dReal g,dReal b)
-{
-    m_red = r;
-    m_green = g;
-    m_blue = b;
-}
-
-void PObject::getColor(dReal& r,dReal& g,dReal& b)
-{
-    r = m_red;
-    g = m_green;
-    b = m_blue;
 }
 
 
@@ -144,8 +116,4 @@ void PObject::initPosGeom()
 void PObject::setMass(dReal mass)
 {
     m_mass = mass;
-}
-
-void PObject::glinit()
-{
 }

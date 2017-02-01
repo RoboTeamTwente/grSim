@@ -29,7 +29,7 @@ private:
     int m_texid;
     bool m_robot;
 public:
-    PCylinder(dReal x,dReal y,dReal z,dReal radius,dReal length,dReal mass,dReal red,dReal green,dReal blue,int tex_id=-1,bool robot=false);
+    PCylinder(dReal x,dReal y,dReal z,dReal radius,dReal length,dReal mass,int tex_id=-1,bool robot=false);
     virtual ~PCylinder();
     virtual void setMass(dReal mass);
     virtual void init();
