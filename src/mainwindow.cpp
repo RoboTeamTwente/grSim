@@ -87,14 +87,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     QMenu *fileMenu = new QMenu("&File");
     menuBar()->addMenu(fileMenu);
-    QAction *takeSnapshotAct = new QAction("&Save snapshot to file", fileMenu);
-    takeSnapshotAct->setShortcut(QKeySequence("F3"));
-    QAction *takeSnapshotToClipboardAct = new QAction("&Copy snapshot to clipboard", fileMenu);
-    takeSnapshotToClipboardAct->setShortcut(QKeySequence("F4"));
     QAction *exit = new QAction("E&xit", fileMenu);
     exit->setShortcut(QKeySequence("Ctrl+X"));
-    fileMenu->addAction(takeSnapshotAct);
-    fileMenu->addAction(takeSnapshotToClipboardAct);
     fileMenu->addAction(exit);
 
     QMenu *viewMenu = new QMenu("&View");
@@ -125,8 +119,6 @@ MainWindow::MainWindow(QWidget *parent)
 
 
     QObject::connect(timer, SIGNAL(timeout()), this, SLOT(update()));
-    QObject::connect(takeSnapshotAct, SIGNAL(triggered(bool)), this, SLOT(takeSnapshot()));
-    QObject::connect(takeSnapshotToClipboardAct, SIGNAL(triggered(bool)), this, SLOT(takeSnapshotToClipboard()));
     QObject::connect(exit, SIGNAL(triggered(bool)), this, SLOT(close()));
     QObject::connect(showsimulator, SIGNAL(triggered(bool)), this, SLOT(showHideSimulator(bool)));
     QObject::connect(showconfig, SIGNAL(triggered(bool)), this, SLOT(showHideConfig(bool)));
@@ -303,20 +295,6 @@ void MainWindow::toggleFullScreen(bool a)
 void MainWindow::setCurrentRobotPosition()
 {
 }
-
-void MainWindow::takeSnapshot()
-{
-    QPixmap p(glwidget->renderPixmap(glwidget->size().width(),glwidget->size().height(),false));
-    p.save(QFileDialog::getSaveFileName(this, tr("Save Snapshot"), current_dir, tr("Images (*.png)")),"PNG",100);
-}
-
-void MainWindow::takeSnapshotToClipboard()
-{
-    QPixmap p(glwidget->renderPixmap(glwidget->size().width(),glwidget->size().height(),false));
-    QClipboard* b = QApplication::clipboard();
-    b->setPixmap(p);
-}
-
 
 
 void MainWindow::reconnectBlueStatusSocket()

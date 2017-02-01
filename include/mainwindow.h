@@ -57,8 +57,6 @@ public slots:
     void restartSimulator();
     void toggleFullScreen(bool);
     void setCurrentRobotPosition();
-    void takeSnapshot();
-    void takeSnapshotToClipboard();
 
     void customFPS(int fps);
     void reconnectCommandSocket();
