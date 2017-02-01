@@ -59,9 +59,6 @@ MainWindow::MainWindow(QWidget *parent)
     dir.cdUp();
     current_dir = dir.path();
     /* Status Logger */
-    printer = new CStatusPrinter();
-    statusWidget = new CStatusWidget(printer);
-    initLogger((void*)printer);
 
     /* Init Workspace */
 #ifdef QT5
@@ -94,9 +91,6 @@ MainWindow::MainWindow(QWidget *parent)
     glwidget->ssl->blueStatusSocket = blueStatusSocket;
     glwidget->ssl->yellowStatusSocket = yellowStatusSocket;
 
-
-
-    robotwidget = new RobotWidget(this);
     /* Status Bar */
     fpslabel = new QLabel(this);
     cursorlabel = new QLabel(this);
@@ -161,12 +155,8 @@ MainWindow::MainWindow(QWidget *parent)
     robotMenu->addMenu(glwidget->blueRobotsMenu);
     robotMenu->addMenu(glwidget->yellowRobotsMenu);
 
-    viewMenu->addAction(robotwidget->toggleViewAction());
     viewMenu->addMenu(glwidget->cameraMenu);
 
-    //addDockWidget(Qt::LeftDockWidgetArea,dockconfig);
-    //addDockWidget(Qt::BottomDockWidgetArea, statusWidget);
-    //addDockWidget(Qt::LeftDockWidgetArea, robotwidget);
 
 #ifdef QT5
     workspace->addSubWindow(glwidget, Qt::CustomizeWindowHint | Qt::WindowTitleHint | Qt::WindowSystemMenuHint | Qt::WindowMinimizeButtonHint | Qt::WindowMaximizeButtonHint);
@@ -189,13 +179,6 @@ MainWindow::MainWindow(QWidget *parent)
     QObject::connect(glwidget, SIGNAL(closeSignal(bool)), this, SLOT(showHideSimulator(bool)));
     QObject::connect(dockconfig, SIGNAL(closeSignal(bool)), this, SLOT(showHideConfig(bool)));
     QObject::connect(glwidget, SIGNAL(selectedRobot()), this, SLOT(updateRobotLabel()));
-    QObject::connect(robotwidget->robotCombo,SIGNAL(currentIndexChanged(int)),this,SLOT(changeCurrentRobot()));
-    QObject::connect(robotwidget->teamCombo,SIGNAL(currentIndexChanged(int)),this,SLOT(changeCurrentTeam()));
-    QObject::connect(robotwidget->resetBtn,SIGNAL(clicked()),glwidget,SLOT(resetCurrentRobot()));
-    QObject::connect(robotwidget->locateBtn,SIGNAL(clicked()),glwidget,SLOT(moveCurrentRobot()));
-    QObject::connect(robotwidget->onOffBtn,SIGNAL(clicked()),glwidget,SLOT(switchRobotOnOff()));
-    QObject::connect(robotwidget->getPoseWidget->okBtn,SIGNAL(clicked()),this,SLOT(setCurrentRobotPosition()));
-    QObject::connect(glwidget,SIGNAL(robotTurnedOnOff(int,bool)),robotwidget,SLOT(changeRobotOnOff(int,bool)));
     QObject::connect(ballMenu,SIGNAL(triggered(QAction*)),this,SLOT(ballMenuTriggered(QAction*)));
     QObject::connect(glwidget,SIGNAL(toggleFullScreen(bool)),this,SLOT(toggleFullScreen(bool)));
     QObject::connect(glwidget->ssl, SIGNAL(fpsChanged(int)), this, SLOT(customFPS(int)));
@@ -235,10 +218,6 @@ MainWindow::MainWindow(QWidget *parent)
     this->showMaximized();
     this->setWindowTitle("grSim");
 
-    robotwidget->teamCombo->setCurrentIndex(0);
-    robotwidget->robotCombo->setCurrentIndex(0);
-    robotwidget->setPicture(glwidget->ssl->robots[robotIndex(glwidget->Current_robot,glwidget->Current_team)]->img);
-    robotwidget->id = 0;
     scene = new QGraphicsScene(0,0,800,600);
 }
 
@@ -260,18 +239,10 @@ void MainWindow::showHideSimulator(bool v)
 
 void MainWindow::changeCurrentRobot()
 {
-    glwidget->Current_robot=robotwidget->robotCombo->currentIndex();
-    robotwidget->setPicture(glwidget->ssl->robots[robotIndex(glwidget->Current_robot,glwidget->Current_team)]->img);
-    robotwidget->id = robotIndex(glwidget->Current_robot, glwidget->Current_team);
-    robotwidget->changeRobotOnOff(robotwidget->id, glwidget->ssl->robots[robotwidget->id]->on);
 }
 
 void MainWindow::changeCurrentTeam()
 {
-    glwidget->Current_team=robotwidget->teamCombo->currentIndex();
-    robotwidget->setPicture(glwidget->ssl->robots[robotIndex(glwidget->Current_robot,glwidget->Current_team)]->img);
-    robotwidget->id = robotIndex(glwidget->Current_robot, glwidget->Current_team);
-    robotwidget->changeRobotOnOff(robotwidget->id, glwidget->ssl->robots[robotwidget->id]->on);
 }
 
 void MainWindow::changeGravity()
@@ -305,8 +276,7 @@ void MainWindow::update()
     aa[0]=(vv[0]-lvv[0])/configwidget->DeltaTime();
     aa[1]=(vv[1]-lvv[1])/configwidget->DeltaTime();
     aa[2]=(vv[2]-lvv[2])/configwidget->DeltaTime();
-    robotwidget->vellabel->setText(QString::number(sqrt(vv[0]*vv[0]+vv[1]*vv[1]+vv[2]*vv[2]),'f',3));
-    robotwidget->acclabel->setText(QString::number(sqrt(aa[0]*aa[0]+aa[1]*aa[1]+aa[2]*aa[2]),'f',3));
+
     lvv[0]=vv[0];
     lvv[1]=vv[1];
     lvv[2]=vv[2];
@@ -331,15 +301,10 @@ void MainWindow::update()
     vanishlabel->setVisible(configwidget->vanishing());
     noiselabel->setVisible(configwidget->noise());
     cursorlabel->setText(QString("Cursor: [X=%1;Y=%2;Z=%3]").arg(dRealToStr(glwidget->ssl->cursor_x)).arg(dRealToStr(glwidget->ssl->cursor_y)).arg(dRealToStr(glwidget->ssl->cursor_z)));
-    statusWidget->update();
 }
 
 void MainWindow::updateRobotLabel()
 {
-    robotwidget->teamCombo->setCurrentIndex(glwidget->Current_team);
-    robotwidget->robotCombo->setCurrentIndex(glwidget->Current_robot);
-    robotwidget->id = robotIndex(glwidget->Current_robot,glwidget->Current_team);
-    robotwidget->changeRobotOnOff(robotwidget->id,glwidget->ssl->robots[robotwidget->id]->on);
 }
 
 
@@ -427,17 +392,6 @@ void MainWindow::toggleFullScreen(bool a)
 
 void MainWindow::setCurrentRobotPosition()
 {
-    int i = robotIndex(glwidget->Current_robot,glwidget->Current_team);
-    bool ok1=false,ok2=false,ok3=false;
-    dReal x = robotwidget->getPoseWidget->x->text().toFloat(&ok1);
-    dReal y = robotwidget->getPoseWidget->y->text().toFloat(&ok2);
-    dReal a = robotwidget->getPoseWidget->a->text().toFloat(&ok3);
-    if (!ok1) {logStatus("Invalid dReal for x",QColor("red"));return;}
-    if (!ok2) {logStatus("Invalid dReal for y",QColor("red"));return;}
-    if (!ok3) {logStatus("Invalid dReal for angle",QColor("red"));return;}
-    glwidget->ssl->robots[i]->setXY(x,y);
-    glwidget->ssl->robots[i]->setDir(a);
-    robotwidget->getPoseWidget->close();
 }
 
 void MainWindow::takeSnapshot()

@@ -33,8 +33,6 @@ Copyright (C) 2011, Parsian Robotic Center (eew.aut.ac.ir/~parsian/grsim)
 
 #include "glwidget.h"
 #include "configwidget.h"
-#include "statuswidget.h"
-#include "robotwidget.h"
 
 class MainWindow : public QMainWindow
 {
@@ -82,10 +80,6 @@ private:
     GLWidget *glwidget;
     ConfigWidget *configwidget;
     ConfigDockWidget *dockconfig;
-    RobotWidget *robotwidget;
-
-    CStatusPrinter *printer;
-    CStatusWidget *statusWidget;
 
     QAction *showsimulator, *showconfig;
     QLabel *fpslabel,*cursorlabel,*selectinglabel,*vanishlabel,*noiselabel;
