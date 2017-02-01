@@ -32,13 +32,14 @@ Copyright (C) 2011, Parsian Robotic Center (eew.aut.ac.ir/~parsian/grsim)
 #include <QDir>
 #include <QClipboard>
 
+#include <iostream>
+
 #ifdef QT5
 #include <QStatusBar>
 #include <QMessageBox>
 #endif
 
 #include "mainwindow.h"
-#include "logger.h"
 
 int MainWindow::getInterval()
 {
@@ -49,7 +50,6 @@ void MainWindow::customFPS(int fps)
 {
     int k = ceil((1000.0f / fps));
     timer->setInterval(k);
-    logStatus(QString("new FPS set by user: %1").arg(fps),"red");
 }
 
 MainWindow::MainWindow(QWidget *parent)
@@ -424,7 +424,7 @@ void MainWindow::reconnectBlueStatusSocket()
     }
     blueStatusSocket = new QUdpSocket(this);
     if (blueStatusSocket->bind(QHostAddress::Any,configwidget->BlueStatusSendPort()))
-        logStatus(QString("Status send port binded for Blue Team on: %1").arg(configwidget->BlueStatusSendPort()),QColor("green"));
+        std::cout << "Status send port binded for Blue Team on: " << configwidget->BlueStatusSendPort() << std::endl;
 }
 
 void MainWindow::reconnectYellowStatusSocket()
@@ -435,7 +435,7 @@ void MainWindow::reconnectYellowStatusSocket()
     }
     yellowStatusSocket = new QUdpSocket(this);
     if (yellowStatusSocket->bind(QHostAddress::Any,configwidget->YellowStatusSendPort()))
-        logStatus(QString("Status send port binded for Yellow Team on: %1").arg(configwidget->YellowStatusSendPort()),QColor("green"));
+        std::cout << "Status send port binded for Yellow Team on: " << configwidget->YellowStatusSendPort() << std::endl;
 }
 
 void MainWindow::reconnectCommandSocket()
@@ -445,9 +445,11 @@ void MainWindow::reconnectCommandSocket()
         QObject::disconnect(commandSocket,SIGNAL(readyRead()),this,SLOT(recvActions()));
         delete commandSocket;
     }
+
     commandSocket = new QUdpSocket(this);
     if (commandSocket->bind(QHostAddress::Any,configwidget->CommandListenPort()))
-        logStatus(QString("Command listen port binded on: %1").arg(configwidget->CommandListenPort()),QColor("green"));
+        std::cout << "Command listen port binded on: " << configwidget->CommandListenPort() << std::endl;
+
     QObject::connect(commandSocket,SIGNAL(readyRead()),this,SLOT(recvActions()));
 }
 
@@ -458,7 +460,6 @@ void MainWindow::reconnectVisionSocket()
     }
     visionServer->change_address(configwidget->VisionMulticastAddr());
     visionServer->change_port(configwidget->VisionMulticastPort());
-    logStatus(QString("Vision server connected on: %1").arg(configwidget->VisionMulticastPort()),QColor("green"));
 }
 
 void MainWindow::recvActions()

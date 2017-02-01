@@ -25,6 +25,8 @@ Copyright (C) 2011, Parsian Robotic Center (eew.aut.ac.ir/~parsian/grsim)
 
 #include "logger.h"
 
+#include <iostream>
+
 #include "grSim_Packet.pb.h"
 #include "grSim_Commands.pb.h"
 #include "grSim_Replacement.pb.h"
@@ -475,8 +477,10 @@ void SSLWorld::recvActions()
     QHostAddress sender;
     quint16 port;
     grSim_Packet packet;
+
     while (commandSocket->hasPendingDatagrams())
     {
+
         int size = commandSocket->readDatagram(in_buffer, 65536, &sender, &port);
         if (size > 0)
         {
