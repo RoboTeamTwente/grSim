@@ -83,15 +83,6 @@ MainWindow::MainWindow(QWidget *parent)
     glwidget->ssl->blueStatusSocket = blueStatusSocket;
     glwidget->ssl->yellowStatusSocket = yellowStatusSocket;
 
-    /* Menus */
-
-    QMenu *fileMenu = new QMenu("&File");
-    menuBar()->addMenu(fileMenu);
-    QAction *exit = new QAction("E&xit", fileMenu);
-    exit->setShortcut(QKeySequence("Ctrl+X"));
-    fileMenu->addAction(exit);
-
-
     glwidget->setWindowState(Qt::WindowMaximized);
 
     timer = new QTimer(this);
@@ -99,7 +90,6 @@ MainWindow::MainWindow(QWidget *parent)
 
 
     QObject::connect(timer, SIGNAL(timeout()), this, SLOT(update()));
-    QObject::connect(exit, SIGNAL(triggered(bool)), this, SLOT(close()));
     QObject::connect(glwidget,SIGNAL(toggleFullScreen(bool)),this,SLOT(toggleFullScreen(bool)));
     QObject::connect(glwidget->ssl, SIGNAL(fpsChanged(int)), this, SLOT(customFPS(int)));
     //config related signals
