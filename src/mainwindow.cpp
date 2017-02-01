@@ -83,22 +83,6 @@ MainWindow::MainWindow(QWidget *parent)
     glwidget->ssl->blueStatusSocket = blueStatusSocket;
     glwidget->ssl->yellowStatusSocket = yellowStatusSocket;
 
-    /* Status Bar */
-    fpslabel = new QLabel(this);
-    cursorlabel = new QLabel(this);
-    selectinglabel = new QLabel(this);
-    vanishlabel = new QLabel("Vanishing",this);
-    noiselabel = new QLabel("Gaussian noise",this);
-    fpslabel->setFrameStyle(QFrame::Panel);
-    cursorlabel->setFrameStyle(QFrame::Panel);
-    selectinglabel->setFrameStyle(QFrame::Panel);
-    vanishlabel->setFrameStyle(QFrame::Panel);
-    noiselabel->setFrameStyle(QFrame::Panel);
-    statusBar()->addWidget(fpslabel);
-    statusBar()->addWidget(cursorlabel);
-    statusBar()->addWidget(selectinglabel);
-    statusBar()->addWidget(vanishlabel);
-    statusBar()->addWidget(noiselabel);
     /* Menus */
 
     QMenu *fileMenu = new QMenu("&File");
@@ -163,7 +147,6 @@ MainWindow::MainWindow(QWidget *parent)
     QObject::connect(showconfig, SIGNAL(triggered(bool)), this, SLOT(showHideConfig(bool)));
     QObject::connect(glwidget, SIGNAL(closeSignal(bool)), this, SLOT(showHideSimulator(bool)));
     QObject::connect(dockconfig, SIGNAL(closeSignal(bool)), this, SLOT(showHideConfig(bool)));
-    QObject::connect(glwidget, SIGNAL(selectedRobot()), this, SLOT(updateRobotLabel()));
     QObject::connect(ballMenu,SIGNAL(triggered(QAction*)),this,SLOT(ballMenuTriggered(QAction*)));
     QObject::connect(glwidget,SIGNAL(toggleFullScreen(bool)),this,SLOT(toggleFullScreen(bool)));
     QObject::connect(glwidget->ssl, SIGNAL(fpsChanged(int)), this, SLOT(customFPS(int)));
@@ -266,30 +249,7 @@ void MainWindow::update()
     lvv[1]=vv[1];
     lvv[2]=vv[2];
     QString ss;
-    fpslabel->setText(QString("Frame rate: %1 fps").arg(ss.sprintf("%06.2f",glwidget->getFPS())));
-    if (glwidget->ssl->selected!=-1)
-    {
-        selectinglabel->setVisible(true);
-        if (glwidget->ssl->selected==-2)
-        {
-            selectinglabel->setText("Ball");
-        }
-        else
-        {
-            int R = glwidget->ssl->selected%ROBOT_COUNT;
-            int T = glwidget->ssl->selected/ROBOT_COUNT;
-            if (T==0) selectinglabel->setText(QString("%1:Blue").arg(R));
-            else selectinglabel->setText(QString("%1:Yellow").arg(R));
-        }
-    }
-    else selectinglabel->setVisible(false);
-    vanishlabel->setVisible(configwidget->vanishing());
-    noiselabel->setVisible(configwidget->noise());
-    cursorlabel->setText(QString("Cursor: [X=%1;Y=%2;Z=%3]").arg(dRealToStr(glwidget->ssl->cursor_x)).arg(dRealToStr(glwidget->ssl->cursor_y)).arg(dRealToStr(glwidget->ssl->cursor_z)));
-}
-
-void MainWindow::updateRobotLabel()
-{
+    // fpslabel->setText(QString("Frame rate: %1 fps").arg(ss.sprintf("%06.2f",glwidget->getFPS())));
 }
 
 

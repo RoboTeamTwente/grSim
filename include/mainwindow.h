@@ -43,7 +43,6 @@ public:
     ~MainWindow();
 public slots:
     void update();
-    void updateRobotLabel();
     void showHideConfig(bool v);
     void showHideSimulator(bool v);
     void changeCurrentRobot();
@@ -78,7 +77,6 @@ private:
     ConfigDockWidget *dockconfig;
 
     QAction *showsimulator, *showconfig;
-    QLabel *fpslabel,*cursorlabel,*selectinglabel,*vanishlabel,*noiselabel;
     QString current_dir;
 
     QGraphicsScene *scene;
