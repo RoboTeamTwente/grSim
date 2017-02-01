@@ -46,68 +46,6 @@ GLWidget::GLWidget(QWidget *parent,ConfigWidget* _cfg)
     cammode = 0;
     setMouseTracking(true);
 
-    blueRobotsMenu = new QMenu("&Blue Robots");
-    yellowRobotsMenu = new QMenu("&Yellow Robots");
-    blueRobotsMenu->addAction(tr("Put all inside with formation 1"));
-    blueRobotsMenu->addAction(tr("Put all inside with formation 2"));
-    blueRobotsMenu->addAction(tr("Put all outside"));
-    blueRobotsMenu->addAction(tr("Put all out of field"));
-    blueRobotsMenu->addAction(tr("Turn all off"));
-    blueRobotsMenu->addAction(tr("Turn all on"));
-    yellowRobotsMenu->addAction(tr("Put all inside with formation 1"));
-    yellowRobotsMenu->addAction(tr("Put all inside with formation 2"));
-    yellowRobotsMenu->addAction(tr("Put all outside"));
-    yellowRobotsMenu->addAction(tr("Put all out of field"));
-    yellowRobotsMenu->addAction(tr("Turn all off"));
-    yellowRobotsMenu->addAction(tr("Turn all on"));
-    robpopup = new QMenu(this);
-    moveRobotAct = new QAction(tr("&Locate robot"),this);
-    selectRobotAct = new QAction(tr("&Select robot"),this);
-    resetRobotAct = new QAction(tr("&Reset robot"),this);
-    onOffRobotAct = new QAction(tr("Turn &off"),this);
-    lockToRobotAct = new QAction(tr("Loc&k camera to this robot"),this);    
-    robpopup->addAction(moveRobotAct);
-    robpopup->addAction(resetRobotAct);
-    robpopup->addAction(onOffRobotAct);
-    robpopup->addAction(lockToRobotAct);
-    robpopup->addMenu(blueRobotsMenu);
-    robpopup->addMenu(yellowRobotsMenu);
-
-    moveBallAct = new QAction(tr("&Locate ball"),this);
-    lockToBallAct = new QAction(tr("Loc&k camera to ball"),this);
-    ballpopup = new QMenu(this);
-    ballpopup->addAction(moveBallAct);
-    ballpopup->addAction(lockToBallAct);
-
-    moveRobotHereAct = new QAction(tr("Locate current &robot here"),this);
-    moveBallHereAct = new QAction(tr("Locate &ball here"),this);
-    mainpopup = new QMenu(this);
-    mainpopup->addAction(moveBallHereAct);
-    mainpopup->addAction(moveRobotHereAct);
-    cameraMenu = new QMenu("&Camera");
-    changeCamModeAct=new QAction(tr("Change &mode"),this);
-    changeCamModeAct->setShortcut(QKeySequence("C"));
-    cameraMenu->addAction(changeCamModeAct);
-    cameraMenu->addAction(lockToRobotAct);
-    cameraMenu->addAction(lockToBallAct);
-
-    mainpopup->addMenu(cameraMenu);
-    mainpopup->addMenu(blueRobotsMenu);
-    mainpopup->addMenu(yellowRobotsMenu);
-
-
-    connect(moveRobotAct, SIGNAL(triggered()), this, SLOT(moveRobot()));
-    connect(selectRobotAct, SIGNAL(triggered()), this, SLOT(selectRobot()));
-    connect(resetRobotAct, SIGNAL(triggered()), this, SLOT(resetRobot()));
-    connect(moveBallAct, SIGNAL(triggered()), this, SLOT(moveBall()));
-    connect(onOffRobotAct, SIGNAL(triggered()), this, SLOT(switchRobotOnOff()));
-    connect(yellowRobotsMenu,SIGNAL(triggered(QAction*)),this,SLOT(yellowRobotsMenuTriggered(QAction*)));
-    connect(blueRobotsMenu,SIGNAL(triggered(QAction*)),this,SLOT(blueRobotsMenuTriggered(QAction*)));
-    connect(moveBallHereAct, SIGNAL(triggered()),this , SLOT(moveBallHere()));
-    connect(moveRobotHereAct, SIGNAL(triggered()),this , SLOT(moveRobotHere()));
-    connect(lockToRobotAct, SIGNAL(triggered()), this, SLOT(lockCameraToRobot()));
-    connect(lockToBallAct, SIGNAL(triggered()), this, SLOT(lockCameraToBall()));
-    connect(changeCamModeAct,SIGNAL(triggered()),this,SLOT(changeCameraMode()));
     setFocusPolicy(Qt::StrongFocus);
     fullScreen = false;
     ctrl = false;
@@ -165,19 +103,17 @@ void GLWidget::switchRobotOnOff()
         if (ssl->robots[k]->on==true)
         {
             ssl->robots[k]->on = false;
-            onOffRobotAct->setText("Turn &on");
             emit robotTurnedOnOff(k,false);
         }
         else {
             ssl->robots[k]->on = true;
-            onOffRobotAct->setText("Turn &off");
             emit robotTurnedOnOff(k,true);
         }
     }
 }
 
 void GLWidget::resetCurrentRobot()
-{       
+{
     ssl->robots[robotIndex(Current_robot,Current_team)]->resetRobot();
 }
 
@@ -227,7 +163,7 @@ void GLWidget::mousePressEvent(QMouseEvent *event)
             if (kickingball)
             {
                 dReal x,y,z;
-                ssl->ball->getBodyPosition(x,y,z);                
+                ssl->ball->getBodyPosition(x,y,z);
                 x = ssl->cursor_x - x;
                 y = ssl->cursor_y - y;
                 dReal lxy = hypot(x,y);
@@ -251,9 +187,9 @@ void GLWidget::mousePressEvent(QMouseEvent *event)
                 z = kickpower*tan(chipAngle);
 
                 dBodySetLinearVel(ssl->ball->body,x,y,z);
-                dBodySetAngularVel(ssl->ball->body,-y/cfg->BallRadius(),x/cfg->BallRadius(),z);    
+                dBodySetAngularVel(ssl->ball->body,-y/cfg->BallRadius(),x/cfg->BallRadius(),z);
             }
-        
+
         }
     }
     if (event->buttons() & Qt::RightButton)
@@ -262,9 +198,6 @@ void GLWidget::mousePressEvent(QMouseEvent *event)
         {
             clicked_robot = ssl->selected;
             selectRobot();
-            if (ssl->robots[ssl->selected]->on)
-                onOffRobotAct->setText("Turn &off");
-            else onOffRobotAct->setText("Turn &on");
             robpopup->exec(event->globalPos());
         }
         else clicked_robot=-1;
@@ -290,7 +223,7 @@ void GLWidget::update3DCursor(int mouse_x,int mouse_y)
     dReal fx,fy,fz,rx,ry,rz,ux,uy,uz,px,py,pz;
     ssl->g->getViewpoint(xyz,hpr);
     ssl->g->getCameraForward(fx,fy,fz);
-    ssl->g->getCameraRight(rx,ry,rz);    
+    ssl->g->getCameraRight(rx,ry,rz);
     ux = ry*fz - rz*fy;
     uy = rz*fx - rx*fz;
     uz = rx*fy - ry*fx;
@@ -312,7 +245,7 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event)
 {
     if (!ssl->g->isGraphicsEnabled()) return;
     int dx = -(event->x() - lastPos.x());
-    int dy = -(event->y() - lastPos.y());    
+    int dy = -(event->y() - lastPos.y());
     if (event->buttons() & Qt::LeftButton) {
         if (ctrl)
             ssl->g->cameraMotion(4,dx,dy);
@@ -339,7 +272,7 @@ dReal GLWidget::getFPS()
 
 
 void GLWidget::initializeGL ()
-{    
+{
     ssl->glinit();
 }
 
@@ -393,7 +326,7 @@ void GLWidget::paintGL()
         ssl->ball->getBodyPosition(x,y,z);
         ssl->g->lookAt(x,y,z);
     }
-    step();    
+    step();
     QFont font;
     for (int i=0;i<ROBOT_COUNT*2;i++)
     {
@@ -546,7 +479,6 @@ void GLWidget::reform(int team,const QString& act)
             int k = robotIndex(i, team);
             if(ssl->robots[k]->on==true) {
                 ssl->robots[k]->on = false;
-                onOffRobotAct->setText("Turn &on");
                 emit robotTurnedOnOff(k, false);
             }
         }
@@ -557,7 +489,6 @@ void GLWidget::reform(int team,const QString& act)
             int k = robotIndex(i, team);
             if(ssl->robots[k]->on==false) {
                 ssl->robots[k]->on = true;
-                onOffRobotAct->setText("Turn &off");
                 emit robotTurnedOnOff(k, true);
             }
         }
@@ -602,4 +533,3 @@ void GLWidgetGraphicsView::mouseReleaseEvent(QMouseEvent *event) {glwidget->mous
 void GLWidgetGraphicsView::wheelEvent(QWheelEvent *event) {glwidget->wheelEvent(event);}
 void GLWidgetGraphicsView::keyPressEvent(QKeyEvent *event){glwidget->keyPressEvent(event);}
 void GLWidgetGraphicsView::closeEvent(QCloseEvent *event){} //{viewportEvent(event);}
-
