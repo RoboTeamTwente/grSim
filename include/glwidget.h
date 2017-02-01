@@ -81,7 +81,6 @@ private:
     QTime time,rendertimer;
     dReal m_fps;
     QPoint lastPos;
-friend class GLWidgetGraphicsView;
 };
 
 #endif // WIDGET_H

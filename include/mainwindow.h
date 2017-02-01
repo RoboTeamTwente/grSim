@@ -53,7 +53,6 @@ public slots:
     void changeTimer();
 
     void restartSimulator();
-    void toggleFullScreen(bool);
     void setCurrentRobotPosition();
 
     void customFPS(int fps);

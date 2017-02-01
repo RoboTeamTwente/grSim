@@ -66,8 +66,6 @@ MainWindow::MainWindow(QWidget *parent)
     dockconfig = new ConfigDockWidget(this,configwidget);
 
     glwidget = new GLWidget(this,configwidget);
-    glwidget->setWindowTitle(tr("Simulator"));
-    glwidget->resize(512,512);
 
     visionServer = NULL;
     commandSocket = NULL;
@@ -83,14 +81,11 @@ MainWindow::MainWindow(QWidget *parent)
     glwidget->ssl->blueStatusSocket = blueStatusSocket;
     glwidget->ssl->yellowStatusSocket = yellowStatusSocket;
 
-    glwidget->setWindowState(Qt::WindowMaximized);
-
     timer = new QTimer(this);
     timer->setInterval(getInterval());
 
 
     QObject::connect(timer, SIGNAL(timeout()), this, SLOT(update()));
-    QObject::connect(glwidget,SIGNAL(toggleFullScreen(bool)),this,SLOT(toggleFullScreen(bool)));
     QObject::connect(glwidget->ssl, SIGNAL(fpsChanged(int)), this, SLOT(customFPS(int)));
     //config related signals
     QObject::connect(configwidget->v_BallMass.get(), SIGNAL(wasEdited(VarPtr)), this, SLOT(changeBallMass()));
@@ -162,23 +157,7 @@ QString dRealToStr(dReal a)
 
 void MainWindow::update()
 {
-    if (glwidget->ssl->g->isGraphicsEnabled()) glwidget->updateGL();
-    else glwidget->step();
-
-    int R = robotIndex(glwidget->Current_robot,glwidget->Current_team);
-
-    const dReal* vv = dBodyGetLinearVel(glwidget->ssl->robots[R]->chassis->body);
-    static dVector3 lvv;
-    dVector3 aa;
-    aa[0]=(vv[0]-lvv[0])/configwidget->DeltaTime();
-    aa[1]=(vv[1]-lvv[1])/configwidget->DeltaTime();
-    aa[2]=(vv[2]-lvv[2])/configwidget->DeltaTime();
-
-    lvv[0]=vv[0];
-    lvv[1]=vv[1];
-    lvv[2]=vv[2];
-    QString ss;
-    // fpslabel->setText(QString("Frame rate: %1 fps").arg(ss.sprintf("%06.2f",glwidget->getFPS())));
+    glwidget->step();
 }
 
 
@@ -218,22 +197,6 @@ void MainWindow::restartSimulator()
     glwidget->ssl->yellowStatusSocket = yellowStatusSocket;
 
 
-}
-
-void MainWindow::toggleFullScreen(bool a)
-{
-    if (a)
-    {
-        lastSize = glwidget->size();
-        glwidget->fullScreen = true;
-    }
-    else {
-        glwidget->show();
-        glwidget->resize(lastSize);
-        glwidget->fullScreen = false;
-        glwidget->setFocusPolicy(Qt::StrongFocus);
-        glwidget->setFocus();
-    }
 }
 
 void MainWindow::setCurrentRobotPosition()
