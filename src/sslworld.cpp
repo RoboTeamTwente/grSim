@@ -150,9 +150,6 @@ SSLWorld::SSLWorld(QGLWidget* parent,ConfigWidget* _cfg,RobotsFomation *form1,Ro
     updatedCursor = false;
     framenum = 0;
     last_dt = -1;
-    g = new CGraphics(parent);
-    g->setSphereQuality(1);
-    g->setViewpoint(0,-(cfg->Field_Width()+cfg->Field_Margin()*2.0f)/2.0f,3,90,-45,0);
     p = new PWorld(0.05,9.81f);
     ball = new PBall (0,0,0.5,cfg->BallRadius(),cfg->BallMass());
 
@@ -301,7 +298,6 @@ SSLWorld::SSLWorld(QGLWidget* parent,ConfigWidget* _cfg,RobotsFomation *form1,Ro
 
 SSLWorld::~SSLWorld()
 {
-    delete g;
     delete p;
 }
 
@@ -341,43 +337,10 @@ QImage* createNumber(int i,int r,int g,int b,int a)
     return img;
 }
 
-void SSLWorld::glinit()
-{
-    g->loadTexture(new QImage(":/grass.png"));
-
-    // Loading Robot textures for each robot
-    for (int i = 0; i < ROBOT_COUNT; i++)
-        g->loadTexture(createBlob('b', i, &robots[i]->img));
-
-    for (int i = 0; i < ROBOT_COUNT; i++)
-        g->loadTexture(createBlob('y', i, &robots[ROBOT_COUNT + i]->img));
-
-    // Creating number textures
-    for (int i=0; i<ROBOT_COUNT;i++)
-        g->loadTexture(createNumber(i,15,193,225,255));
-
-    for (int i=0; i<ROBOT_COUNT;i++)
-        g->loadTexture(createNumber(i,0xff,0xff,0,255));
-
-    // Loading sky textures
-    // XXX: for some reason they are loaded twice otherwise the wheel texture is wrong
-    for (int i=0; i<6; i++) {
-        g->loadTexture(new QImage(QString(":/sky/neg_%1").arg(i%3==0?'x':i%3==1?'y':'z')+QString(".png")));
-        g->loadTexture(new QImage(QString(":/sky/pos_%1").arg(i%3==0?'x':i%3==1?'y':'z')+QString(".png")));
-    }
-
-    // The wheel texture
-    g->loadTexture(new QImage(":/wheel.png"));
-}
-
 void SSLWorld::step(dReal dt)
 {
-    if (!isGLEnabled) g->disableGraphics();
-    else g->enableGraphics();
-
     if (customDT > 0)
         dt = customDT;
-    g->initScene(m_parent->width(),m_parent->height(),0,0.7,1);//true,0.7,0.7,0.7,0.8);
     for (int kk=0;kk<5;kk++)
     {
         const dReal* ballvel = dBodyGetLinearVel(ball->body);
@@ -416,7 +379,6 @@ void SSLWorld::step(dReal dt)
         best_k=-2;
         dReal bx,by,bz;
         ball->getBodyPosition(bx,by,bz);
-        g->getViewpoint(xyz,hpr);
         best_dist  =(bx-xyz[0])*(bx-xyz[0])
                 +(by-xyz[1])*(by-xyz[1])
                 +(bz-xyz[2])*(bz-xyz[2]);
@@ -425,7 +387,6 @@ void SSLWorld::step(dReal dt)
     {
         if (robots[k]->selected)
         {
-            g->getViewpoint(xyz,hpr);
             dReal dist= (robots[k]->select_x-xyz[0])*(robots[k]->select_x-xyz[0])
                     +(robots[k]->select_y-xyz[1])*(robots[k]->select_y-xyz[1])
                     +(robots[k]->select_z-xyz[2])*(robots[k]->select_z-xyz[2]);
@@ -442,23 +403,8 @@ void SSLWorld::step(dReal dt)
         robots[k]->step();
         robots[k]->selected = false;
     }
-    g->drawSkybox(31,32,33,34,35,36);
 
     dMatrix3 R;
-
-    if (g->isGraphicsEnabled())
-        if (show3DCursor)
-        {
-            dRFromAxisAndAngle(R,0,0,1,0);
-            g->setColor(1,0.9,0.2,0.5);
-            glEnable(GL_BLEND);
-            glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
-            g->drawCircle(cursor_x,cursor_y,0.001,cursor_radius);
-            glDisable(GL_BLEND);
-        }
-    //for (int k=0;k<10;k++) robots[k]->drawLabel();
-
-    g->finalizeScene();
 
 
     sendVisionBuffer();

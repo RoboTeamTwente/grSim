@@ -65,7 +65,6 @@ public:
     bool isGLEnabled;
     SSLWorld(QGLWidget* parent,ConfigWidget* _cfg,RobotsFomation *form1,RobotsFomation *form2);
     virtual ~SSLWorld();
-    void glinit();
     void step(dReal dt=-1);
     SSL_WrapperPacket* generatePacket(int cam_id=0);
     void addFieldLinesArcs(SSL_GeometryFieldSize *field);
@@ -75,7 +74,6 @@ public:
     void sendVisionBuffer();
     bool visibleInCam(int id, double x, double y);
     ConfigWidget* cfg;
-    CGraphics* g;
     PWorld* p;
     PBall* ball;
     PGround* ground;

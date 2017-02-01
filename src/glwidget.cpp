@@ -134,28 +134,6 @@ void GLWidget::moveBall()
 
 void GLWidget::update3DCursor(int mouse_x,int mouse_y)
 {
-    if (!ssl->g->isGraphicsEnabled()) return;
-    ssl->updatedCursor = true;
-    dVector3 xyz,hpr;
-    dReal fx,fy,fz,rx,ry,rz,ux,uy,uz,px,py,pz;
-    ssl->g->getViewpoint(xyz,hpr);
-    ssl->g->getCameraForward(fx,fy,fz);
-    ssl->g->getCameraRight(rx,ry,rz);
-    ux = ry*fz - rz*fy;
-    uy = rz*fx - rx*fz;
-    uz = rx*fy - ry*fx;
-    dReal w = width();
-    dReal h = height();
-    dReal xx,yy,z;
-    dReal x = 1.0f - 2.0f*(dReal) mouse_x / w;
-    dReal y = 1.0f - 2.0f*(dReal) mouse_y / h;
-    ssl->g->getFrustum(xx,yy,z);
-    x *= xx;
-    y *= yy;
-    px = -ux*y - rx*x - z*fx;
-    py = -uy*y - ry*x - z*fy;
-    pz = -uz*y - rz*x - z*fz;
-    ssl->ray->setPose(xyz[0],xyz[1],xyz[2],px,py,pz);
 }
 
 dReal GLWidget::getFPS()
@@ -166,7 +144,7 @@ dReal GLWidget::getFPS()
 
 void GLWidget::initializeGL ()
 {
-    ssl->glinit();
+
 }
 
 void GLWidget::step()
@@ -199,64 +177,11 @@ void GLWidget::step()
 
 void GLWidget::paintGL()
 {
-    if (!ssl->g->isGraphicsEnabled()) return;
-    if (cammode==1)
-    {
-        dReal x,y,z;
-        int R = robotIndex(Current_robot,Current_team);
-        ssl->robots[R]->getXY(x,y);z = 0.3;
-        ssl->g->setViewpoint(x,y,z,ssl->robots[R]->getDir(),-25,0);
-    }
-    if (cammode==-1)
-    {
-        dReal x,y,z;
-        ssl->robots[lockedIndex]->getXY(x,y);z = 0.1;
-        ssl->g->lookAt(x,y,z);
-    }
-    if (cammode==-2)
-    {
-        dReal x,y,z;
-        ssl->ball->getBodyPosition(x,y,z);
-        ssl->g->lookAt(x,y,z);
-    }
-    step();
-    QFont font;
-    for (int i=0;i<ROBOT_COUNT*2;i++)
-    {
-        dReal xx,yy;
-        ssl->robots[i]->getXY(xx,yy);
-        if (i>=ROBOT_COUNT) qglColor(Qt::yellow);
-        else qglColor(Qt::cyan);
-        renderText(xx,yy,0.3,QString::number(i%ROBOT_COUNT),font);
-        if (!ssl->robots[i]->on){
-            qglColor(Qt::red);
-            font.setBold(true);
-            renderText(xx,yy,0.4,"Off",font);
-        }
-        font.setBold(false);
-    }
 }
 
 void GLWidget::changeCameraMode()
 {
-    static dReal xyz[3],hpr[3];
-    if (cammode<0) cammode=0;
-    else cammode ++;
-    cammode %= 6;
-    if (cammode==0)
-        ssl->g->setViewpoint(0,-(cfg->Field_Width()+cfg->Field_Margin()*2.0f)/2.0f,3,90,-45,0);
-    else if (cammode==1)
-    {
-        ssl->g->getViewpoint(xyz,hpr);
-    }
-    else if (cammode==2)
-        ssl->g->setViewpoint(0,0,5,0,-90,0);
-    else if (cammode==3)
-        ssl->g->setViewpoint(0, (cfg->Field_Width()+cfg->Field_Margin()*2.0f)/2.0f,3,270,-45,0);
-    else if (cammode==4)
-        ssl->g->setViewpoint(-(cfg->Field_Length()+cfg->Field_Margin()*2.0f)/2.0f,0,3,0,-45,0);
-    else if (cammode==5)
-        ssl->g->setViewpoint((cfg->Field_Length()+cfg->Field_Margin()*2.0f)/2.0f,0,3,180,-45,0);
+
 }
 
 void GLWidget::putBall(dReal x,dReal y)
