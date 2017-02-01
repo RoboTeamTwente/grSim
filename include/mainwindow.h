@@ -43,8 +43,6 @@ public:
     ~MainWindow();
 public slots:
     void update();
-    void showHideConfig(bool v);
-    void showHideSimulator(bool v);
     void changeCurrentRobot();
     void changeCurrentTeam();
 
@@ -72,7 +70,6 @@ private:
     ConfigWidget *configwidget;
     ConfigDockWidget *dockconfig;
 
-    QAction *showsimulator, *showconfig;
     QString current_dir;
 
     QGraphicsScene *scene;

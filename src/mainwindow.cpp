@@ -91,26 +91,6 @@ MainWindow::MainWindow(QWidget *parent)
     exit->setShortcut(QKeySequence("Ctrl+X"));
     fileMenu->addAction(exit);
 
-    QMenu *viewMenu = new QMenu("&View");
-    menuBar()->addMenu(viewMenu);
-    showsimulator = new QAction("&Simulator", viewMenu);
-    showsimulator->setCheckable(true);
-    showsimulator->setChecked(true);
-    viewMenu->addAction(showsimulator);
-    showconfig = new QAction("&Configuration", viewMenu);
-    showconfig->setCheckable(true);
-    showconfig->setChecked(true);
-    viewMenu->addAction(showconfig);
-
-    QMenu *simulatorMenu = new QMenu("&Simulator");
-    menuBar()->addMenu(simulatorMenu);
-    QMenu *robotMenu = new QMenu("&Robot");
-    simulatorMenu->addMenu(robotMenu);
-
-    robotMenu->addMenu(glwidget->blueRobotsMenu);
-    robotMenu->addMenu(glwidget->yellowRobotsMenu);
-
-    viewMenu->addMenu(glwidget->cameraMenu);
 
     glwidget->setWindowState(Qt::WindowMaximized);
 
@@ -120,10 +100,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     QObject::connect(timer, SIGNAL(timeout()), this, SLOT(update()));
     QObject::connect(exit, SIGNAL(triggered(bool)), this, SLOT(close()));
-    QObject::connect(showsimulator, SIGNAL(triggered(bool)), this, SLOT(showHideSimulator(bool)));
-    QObject::connect(showconfig, SIGNAL(triggered(bool)), this, SLOT(showHideConfig(bool)));
-    QObject::connect(glwidget, SIGNAL(closeSignal(bool)), this, SLOT(showHideSimulator(bool)));
-    QObject::connect(dockconfig, SIGNAL(closeSignal(bool)), this, SLOT(showHideConfig(bool)));
     QObject::connect(glwidget,SIGNAL(toggleFullScreen(bool)),this,SLOT(toggleFullScreen(bool)));
     QObject::connect(glwidget->ssl, SIGNAL(fpsChanged(int)), this, SLOT(customFPS(int)));
     //config related signals
@@ -166,18 +142,6 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
-}
-
-void MainWindow::showHideConfig(bool v)
-{
-    if (v) {dockconfig->show();showconfig->setChecked(true);}
-    else {dockconfig->hide();showconfig->setChecked(false);}
-}
-
-void MainWindow::showHideSimulator(bool v)
-{
-    if (v) {glwidget->show();showsimulator->setChecked(true);}
-    else {glwidget->hide();showsimulator->setChecked(false);}
 }
 
 void MainWindow::changeCurrentRobot()
