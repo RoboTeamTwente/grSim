@@ -49,7 +49,6 @@ public:
     bool fullScreen;
     void update3DCursor(int mouse_x,int mouse_y);
     void putBall(dReal x,dReal y);
-    void reform(int team,const QString& act);
     void step();
 public slots:
     void moveRobot();
@@ -60,8 +59,6 @@ public slots:
     void resetCurrentRobot();
     void moveBall();
     void changeCameraMode();
-    void yellowRobotsMenuTriggered(QAction* act);
-    void blueRobotsMenuTriggered(QAction* act);
     void switchRobotOnOff();
     void moveRobotHere();
     void moveBallHere();
@@ -76,14 +73,6 @@ signals:
 protected:
     void paintGL ();
     void initializeGL ();
-
-    void mousePressEvent(QMouseEvent *event);
-    void mouseMoveEvent(QMouseEvent *event);
-    void mouseReleaseEvent(QMouseEvent *event);
-    void wheelEvent(QWheelEvent *event);
-    void keyPressEvent(QKeyEvent *event);
-    void keyReleaseEvent(QKeyEvent* event);
-    void closeEvent(QCloseEvent *event);
 private:
     int state;
     int moving_robot_id,clicked_robot;
@@ -93,21 +82,6 @@ private:
     dReal m_fps;
     QPoint lastPos;
 friend class GLWidgetGraphicsView;
-};
-
-class GLWidgetGraphicsView : public QGraphicsView
-{
-    private:
-        GLWidget *glwidget;
-    public:
-        GLWidgetGraphicsView(QGraphicsScene *scene,GLWidget* _glwidget);
-    protected:
-        void mousePressEvent(QMouseEvent *event);
-        void mouseMoveEvent(QMouseEvent *event);
-        void mouseReleaseEvent(QMouseEvent *event);
-        void wheelEvent(QWheelEvent *event);
-        void keyPressEvent(QKeyEvent *event);
-        void closeEvent(QCloseEvent *event);
 };
 
 #endif // WIDGET_H

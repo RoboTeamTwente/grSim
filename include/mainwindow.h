@@ -73,7 +73,6 @@ private:
     QString current_dir;
 
     QGraphicsScene *scene;
-    GLWidgetGraphicsView *view;
     QSize lastSize;
     RoboCupSSLServer *visionServer;
     QUdpSocket *commandSocket;

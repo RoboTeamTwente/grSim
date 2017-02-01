@@ -224,20 +224,10 @@ void MainWindow::toggleFullScreen(bool a)
 {
     if (a)
     {
-        view = new GLWidgetGraphicsView(scene,glwidget);
         lastSize = glwidget->size();
-        view->setViewport(glwidget);
-        view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-        view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-        view->setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
-        view->setFrameStyle(0);
-        view->showFullScreen();
-        view->setFocus();
         glwidget->fullScreen = true;
     }
     else {
-        view->close();
-
         glwidget->show();
         glwidget->resize(lastSize);
         glwidget->fullScreen = false;
