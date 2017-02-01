@@ -29,12 +29,10 @@ Copyright (C) 2011, Parsian Robotic Center (eew.aut.ac.ir/~parsian/grsim)
 #include <QWorkspace>
 #endif
 
-#include <QLabel>
-
 #include "glwidget.h"
 #include "configwidget.h"
 
-class MainWindow : public QMainWindow
+class MainWindow : public QObject
 {
     Q_OBJECT
 

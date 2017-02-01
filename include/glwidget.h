@@ -27,12 +27,11 @@ Copyright (C) 2011, Parsian Robotic Center (eew.aut.ac.ir/~parsian/grsim)
 #include "sslworld.h"
 #include "configwidget.h"
 
-class GLWidgetGraphicsView;
-class GLWidget : public QGLWidget {
+class GLWidget : public QObject {
 
     Q_OBJECT
 public:
-    GLWidget(QWidget *parent,ConfigWidget* _cfg);
+    GLWidget(QObject *parent,ConfigWidget* _cfg);
     ~GLWidget();
     dReal getFPS();
     ConfigWidget* cfg;

@@ -16,28 +16,7 @@ Copyright (C) 2011, Parsian Robotic Center (eew.aut.ac.ir/~parsian/grsim)
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <QtGui>
-
-#include <QApplication>
-#include <QMenuBar>
-#include <QGroupBox>
-#include <QGridLayout>
-#include <QSlider>
-#include <QTimer>
-#include <QToolBar>
-#include <QDockWidget>
-#include <QVBoxLayout>
-#include <QFileDialog>
-#include <QApplication>
-#include <QDir>
-#include <QClipboard>
-
 #include <iostream>
-
-#ifdef QT5
-#include <QStatusBar>
-#include <QMessageBox>
-#endif
 
 #include "mainwindow.h"
 
@@ -53,7 +32,7 @@ void MainWindow::customFPS(int fps)
 }
 
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
+    : QObject(parent)
 {
     QDir dir = qApp->applicationDirPath();
     dir.cdUp();
@@ -63,7 +42,6 @@ MainWindow::MainWindow(QWidget *parent)
     /* Widgets */
 
     configwidget = new ConfigWidget();
-    dockconfig = new ConfigDockWidget(this,configwidget);
 
     glwidget = new GLWidget(this,configwidget);
 
@@ -116,13 +94,10 @@ MainWindow::MainWindow(QWidget *parent)
     QObject::connect(configwidget->v_CommandListenPort.get(), SIGNAL(wasEdited(VarPtr)), this, SLOT(reconnectCommandSocket()));
     QObject::connect(configwidget->v_BlueStatusSendPort.get(), SIGNAL(wasEdited(VarPtr)), this, SLOT(reconnectBlueStatusSocket()));
     QObject::connect(configwidget->v_YellowStatusSendPort.get(), SIGNAL(wasEdited(VarPtr)), this, SLOT(reconnectYellowStatusSocket()));
+
+
     timer->start();
 
-
-    this->showMaximized();
-    this->setWindowTitle("grSim");
-
-    scene = new QGraphicsScene(0,0,800,600);
 }
 
 MainWindow::~MainWindow()

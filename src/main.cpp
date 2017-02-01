@@ -62,11 +62,7 @@ refactor variable names
 
 int main(int argc, char *argv[])
 {
-    QCoreApplication::setOrganizationName("Parsian");
-    QCoreApplication::setOrganizationDomain("parsian-robotics.com");
-    QCoreApplication::setApplicationName("grSim");
     QApplication a(argc, argv);
     MainWindow w;
-    w.show();
     return a.exec();
 }
