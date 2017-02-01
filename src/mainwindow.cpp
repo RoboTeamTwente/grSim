@@ -69,7 +69,7 @@ MainWindow::MainWindow(QWidget *parent)
 #else
     workspace = new QWorkspace(this);
 #endif
-    setCentralWidget(workspace);    
+    setCentralWidget(workspace);
 
     /* Widgets */
 
@@ -78,7 +78,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     glwidget = new GLWidget(this,configwidget);
     glwidget->setWindowTitle(tr("Simulator"));
-    glwidget->resize(512,512);    
+    glwidget->resize(512,512);
 
     visionServer = NULL;
     commandSocket = NULL;
@@ -116,11 +116,11 @@ MainWindow::MainWindow(QWidget *parent)
     /* Menus */
 
     QMenu *fileMenu = new QMenu("&File");
-    menuBar()->addMenu(fileMenu);    
+    menuBar()->addMenu(fileMenu);
     QAction *takeSnapshotAct = new QAction("&Save snapshot to file", fileMenu);
     takeSnapshotAct->setShortcut(QKeySequence("F3"));
     QAction *takeSnapshotToClipboardAct = new QAction("&Copy snapshot to clipboard", fileMenu);
-    takeSnapshotToClipboardAct->setShortcut(QKeySequence("F4"));    
+    takeSnapshotToClipboardAct->setShortcut(QKeySequence("F4"));
     QAction *exit = new QAction("E&xit", fileMenu);
     exit->setShortcut(QKeySequence("Ctrl+X"));
     fileMenu->addAction(takeSnapshotAct);
@@ -161,24 +161,18 @@ MainWindow::MainWindow(QWidget *parent)
     robotMenu->addMenu(glwidget->blueRobotsMenu);
     robotMenu->addMenu(glwidget->yellowRobotsMenu);
 
-    fullScreenAct = new QAction(tr("&Full screen"),simulatorMenu);
-    fullScreenAct->setShortcut(QKeySequence("F2"));
-    fullScreenAct->setCheckable(true);
-    fullScreenAct->setChecked(false);
-    simulatorMenu->addAction(fullScreenAct);
-
     viewMenu->addAction(robotwidget->toggleViewAction());
     viewMenu->addMenu(glwidget->cameraMenu);
 
-    addDockWidget(Qt::LeftDockWidgetArea,dockconfig);
-    addDockWidget(Qt::BottomDockWidgetArea, statusWidget);
-    addDockWidget(Qt::LeftDockWidgetArea, robotwidget);
+    //addDockWidget(Qt::LeftDockWidgetArea,dockconfig);
+    //addDockWidget(Qt::BottomDockWidgetArea, statusWidget);
+    //addDockWidget(Qt::LeftDockWidgetArea, robotwidget);
 
 #ifdef QT5
     workspace->addSubWindow(glwidget, Qt::CustomizeWindowHint | Qt::WindowTitleHint | Qt::WindowSystemMenuHint | Qt::WindowMinimizeButtonHint | Qt::WindowMaximizeButtonHint);
 #else
    workspace->addWindow(glwidget, Qt::CustomizeWindowHint | Qt::WindowTitleHint | Qt::WindowSystemMenuHint | Qt::WindowMinimizeButtonHint | Qt::WindowMaximizeButtonHint);
-#endif    
+#endif
 
     glwidget->setWindowState(Qt::WindowMaximized);
 
@@ -192,7 +186,7 @@ MainWindow::MainWindow(QWidget *parent)
     QObject::connect(exit, SIGNAL(triggered(bool)), this, SLOT(close()));
     QObject::connect(showsimulator, SIGNAL(triggered(bool)), this, SLOT(showHideSimulator(bool)));
     QObject::connect(showconfig, SIGNAL(triggered(bool)), this, SLOT(showHideConfig(bool)));
-    QObject::connect(glwidget, SIGNAL(closeSignal(bool)), this, SLOT(showHideSimulator(bool)));    
+    QObject::connect(glwidget, SIGNAL(closeSignal(bool)), this, SLOT(showHideSimulator(bool)));
     QObject::connect(dockconfig, SIGNAL(closeSignal(bool)), this, SLOT(showHideConfig(bool)));
     QObject::connect(glwidget, SIGNAL(selectedRobot()), this, SLOT(updateRobotLabel()));
     QObject::connect(robotwidget->robotCombo,SIGNAL(currentIndexChanged(int)),this,SLOT(changeCurrentRobot()));
@@ -203,7 +197,6 @@ MainWindow::MainWindow(QWidget *parent)
     QObject::connect(robotwidget->getPoseWidget->okBtn,SIGNAL(clicked()),this,SLOT(setCurrentRobotPosition()));
     QObject::connect(glwidget,SIGNAL(robotTurnedOnOff(int,bool)),robotwidget,SLOT(changeRobotOnOff(int,bool)));
     QObject::connect(ballMenu,SIGNAL(triggered(QAction*)),this,SLOT(ballMenuTriggered(QAction*)));
-    QObject::connect(fullScreenAct,SIGNAL(triggered(bool)),this,SLOT(toggleFullScreen(bool)));
     QObject::connect(glwidget,SIGNAL(toggleFullScreen(bool)),this,SLOT(toggleFullScreen(bool)));
     QObject::connect(glwidget->ssl, SIGNAL(fpsChanged(int)), this, SLOT(customFPS(int)));
     QObject::connect(aboutMenu, SIGNAL(triggered()), this, SLOT(showAbout()));
@@ -246,7 +239,7 @@ MainWindow::MainWindow(QWidget *parent)
     robotwidget->robotCombo->setCurrentIndex(0);
     robotwidget->setPicture(glwidget->ssl->robots[robotIndex(glwidget->Current_robot,glwidget->Current_team)]->img);
     robotwidget->id = 0;
-    scene = new QGraphicsScene(0,0,800,600);    
+    scene = new QGraphicsScene(0,0,800,600);
 }
 
 MainWindow::~MainWindow()
@@ -267,7 +260,7 @@ void MainWindow::showHideSimulator(bool v)
 
 void MainWindow::changeCurrentRobot()
 {
-    glwidget->Current_robot=robotwidget->robotCombo->currentIndex();    
+    glwidget->Current_robot=robotwidget->robotCombo->currentIndex();
     robotwidget->setPicture(glwidget->ssl->robots[robotIndex(glwidget->Current_robot,glwidget->Current_team)]->img);
     robotwidget->id = robotIndex(glwidget->Current_robot, glwidget->Current_team);
     robotwidget->changeRobotOnOff(robotwidget->id, glwidget->ssl->robots[robotwidget->id]->on);
@@ -318,16 +311,16 @@ void MainWindow::update()
     lvv[1]=vv[1];
     lvv[2]=vv[2];
     QString ss;
-    fpslabel->setText(QString("Frame rate: %1 fps").arg(ss.sprintf("%06.2f",glwidget->getFPS())));        
+    fpslabel->setText(QString("Frame rate: %1 fps").arg(ss.sprintf("%06.2f",glwidget->getFPS())));
     if (glwidget->ssl->selected!=-1)
     {
         selectinglabel->setVisible(true);
         if (glwidget->ssl->selected==-2)
-        {            
+        {
             selectinglabel->setText("Ball");
         }
         else
-        {            
+        {
             int R = glwidget->ssl->selected%ROBOT_COUNT;
             int T = glwidget->ssl->selected/ROBOT_COUNT;
             if (T==0) selectinglabel->setText(QString("%1:Blue").arg(R));
@@ -376,7 +369,7 @@ void MainWindow::changeBallDamping()
 }
 
 void MainWindow::restartSimulator()
-{        
+{
     delete glwidget->ssl;
     glwidget->ssl = new SSLWorld(glwidget,glwidget->cfg,glwidget->forms[2],glwidget->forms[2]);
     glwidget->ssl->glinit();
@@ -407,19 +400,18 @@ void MainWindow::toggleFullScreen(bool a)
     if (a)
     {
         view = new GLWidgetGraphicsView(scene,glwidget);
-        lastSize = glwidget->size();        
+        lastSize = glwidget->size();
         view->setViewport(glwidget);
         view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
         view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
         view->setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
         view->setFrameStyle(0);
         view->showFullScreen();
-        view->setFocus();        
+        view->setFocus();
         glwidget->fullScreen = true;
-        fullScreenAct->setChecked(true);
     }
     else {
-        view->close(); 
+        view->close();
 #ifdef QT5
         workspace->addSubWindow(glwidget, Qt::CustomizeWindowHint | Qt::WindowTitleHint | Qt::WindowSystemMenuHint | Qt::WindowMinimizeButtonHint | Qt::WindowMaximizeButtonHint);
 #else
@@ -428,7 +420,6 @@ void MainWindow::toggleFullScreen(bool a)
         glwidget->show();
         glwidget->resize(lastSize);
         glwidget->fullScreen = false;
-        fullScreenAct->setChecked(false);
         glwidget->setFocusPolicy(Qt::StrongFocus);
         glwidget->setFocus();
     }
@@ -520,4 +511,3 @@ void MainWindow::recvActions()
 {
     glwidget->ssl->recvActions();
 }
-
