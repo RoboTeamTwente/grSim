@@ -25,7 +25,6 @@ class PCylinder : public PObject
 {
 private:
     dReal m_radius,m_length;
-    GLuint m_gllistid;
     int m_texid;
     bool m_robot;
 public:

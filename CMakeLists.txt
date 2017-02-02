@@ -114,7 +114,6 @@ set(SOURCES
     src/main.cpp
     src/mainwindow.cpp
     src/glwidget.cpp
-    src/graphics.cpp
     src/physics/pworld.cpp
     src/physics/pobject.cpp
     src/physics/pball.cpp
@@ -137,7 +136,6 @@ set(SOURCES
 set(HEADERS
     include/mainwindow.h
     include/glwidget.h
-    include/graphics.h
     include/physics/pworld.h
     include/physics/pobject.h
     include/physics/pball.h
@@ -245,5 +243,3 @@ else()
     set(CPACK_PACKAGE_FILE_NAME "${CMAKE_PROJECT_NAME_LOWER}_${CPACK_PACKAGE_VERSION}_${ARCH}")
 endif()
 include(CPack)
-
-
