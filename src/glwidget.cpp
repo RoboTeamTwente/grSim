@@ -16,9 +16,7 @@ Copyright (C) 2011, Parsian Robotic Center (eew.aut.ac.ir/~parsian/grsim)
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "config.h"
-#include <QtGui>
 
-#include <QPainter>
 #include "glwidget.h"
 #include "physics/pball.h"
 #include "physics/pground.h"

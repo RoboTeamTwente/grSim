@@ -31,7 +31,7 @@ void MainWindow::customFPS(int fps)
     timer->setInterval(k);
 }
 
-MainWindow::MainWindow(QWidget *parent)
+MainWindow::MainWindow(QObject *parent)
     : QObject(parent)
 {
     QDir dir = qApp->applicationDirPath();

@@ -19,8 +19,6 @@ Copyright (C) 2011, Parsian Robotic Center (eew.aut.ac.ir/~parsian/grsim)
 #ifndef SSLWORLD_H
 #define SSLWORLD_H
 
-
-#include <QGLWidget>
 #include <QObject>
 #include <QUdpSocket>
 #include <QList>

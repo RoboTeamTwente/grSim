@@ -23,12 +23,6 @@ Copyright (C) 2011, Parsian Robotic Center (eew.aut.ac.ir/~parsian/grsim)
 #define QT5
 #endif
 
-#ifdef QT5
-#include <QMdiArea>
-#else
-#include <QWorkspace>
-#endif
-
 #include "glwidget.h"
 #include "configwidget.h"
 
@@ -37,7 +31,7 @@ class MainWindow : public QObject
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = 0);
+    MainWindow(QObject *parent = 0);
     ~MainWindow();
 public slots:
     void update();
@@ -70,7 +64,6 @@ private:
 
     QString current_dir;
 
-    QGraphicsScene *scene;
     QSize lastSize;
     RoboCupSSLServer *visionServer;
     QUdpSocket *commandSocket;
