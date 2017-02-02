@@ -37,7 +37,8 @@ MainWindow::MainWindow(QWidget *parent)
     QDir dir = qApp->applicationDirPath();
     dir.cdUp();
     current_dir = dir.path();
-    /* Status Logger */
+
+    printFpsCounter = 0;
 
     /* Widgets */
 
@@ -136,7 +137,7 @@ void MainWindow::update()
 
     // Print the framerate once every vew frames.
     if (printFpsCounter <= 0) {
-        std::cout << "FPS:" << glwidget->getFPS() << std::endl;
+        std::cout << "FPS: " << glwidget->getFPS() << std::endl;
         printFpsCounter = 100;
     } else {
         printFpsCounter--;

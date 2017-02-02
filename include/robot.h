@@ -47,7 +47,6 @@ public:
     //these values are not controled by this class
     bool selected;
     dReal select_x,select_y,select_z;
-    QImage *img,*number;
     class Wheel
     {
       public:

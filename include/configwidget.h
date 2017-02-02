@@ -19,12 +19,10 @@ Copyright (C) 2011, Parsian Robotic Center (eew.aut.ac.ir/~parsian/grsim)
 #ifndef CONFIGWIDGET_H
 #define CONFIGWIDGET_H
 
-#include <QWidget>
-#include <QDockWidget>
-#include <QtGui>
-#include <QSplitter>
+#include <QTimer>
+#include <QApplication>
+#include <QDir>
 #include <QStringList>
-#include <QMainWindow>
 #include <QSettings>
 
 #include <stdint.h>
