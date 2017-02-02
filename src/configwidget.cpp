@@ -173,15 +173,6 @@ ConfigWidget::~ConfigWidget() {
 }
 
 
-ConfigDockWidget::ConfigDockWidget(QWidget* _parent,ConfigWidget* _conf){
-    parent=_parent;conf=_conf;
-}
-void ConfigDockWidget::closeEvent(QCloseEvent* event)
-{
-    emit closeSignal(false);
-}
-
-
 void ConfigWidget::loadRobotsSettings()
 {
     loadRobotSettings(YellowTeam().c_str());

@@ -181,17 +181,4 @@ public slots:
   void loadRobotsSettings();
 };
 
-class ConfigDockWidget : public QDockWidget
-{
-    Q_OBJECT
-  public:
-    QWidget* parent;
-    ConfigWidget* conf;
-    ConfigDockWidget(QWidget* _parent,ConfigWidget* _conf);
-  protected:
-    void closeEvent(QCloseEvent* event);
-  signals:
-    void closeSignal(bool);
-};
-
 #endif // CONFIGWIDGET_H

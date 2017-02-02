@@ -67,7 +67,6 @@ private:
 
     GLWidget *glwidget;
     ConfigWidget *configwidget;
-    ConfigDockWidget *dockconfig;
 
     QString current_dir;
 
