@@ -26,7 +26,6 @@ Copyright (C) 2011, Parsian Robotic Center (eew.aut.ac.ir/~parsian/grsim)
 #include <QList>
 
 
-#include "graphics.h"
 #include "physics/pworld.h"
 #include "physics/pball.h"
 #include "physics/pground.h"
