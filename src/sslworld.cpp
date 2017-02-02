@@ -23,8 +23,6 @@ Copyright (C) 2011, Parsian Robotic Center (eew.aut.ac.ir/~parsian/grsim)
 
 #include <QDebug>
 
-#include "logger.h"
-
 #include <iostream>
 
 #include "grSim_Packet.pb.h"

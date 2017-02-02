@@ -22,7 +22,6 @@ Copyright (C) 2011, Parsian Robotic Center (eew.aut.ac.ir/~parsian/grsim)
 #include "glwidget.h"
 #include "physics/pball.h"
 #include "physics/pground.h"
-#include "logger.h"
 #include <QLabel>
 
 #include <iostream>

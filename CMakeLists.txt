@@ -127,8 +127,6 @@ set(SOURCES
     src/sslworld.cpp
     src/robot.cpp
     src/configwidget.cpp
-    src/statuswidget.cpp
-    src/logger.cpp
 )
 
 set(HEADERS
@@ -147,8 +145,6 @@ set(HEADERS
     include/sslworld.h
     include/robot.h
     include/configwidget.h
-    include/statuswidget.h
-    include/logger.h
     include/common.h
     include/config.h
 )
