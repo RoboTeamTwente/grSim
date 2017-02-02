@@ -109,13 +109,13 @@ public:
 };
 
 
-class ConfigWidget : public VarTreeView
+class ConfigWidget : public QObject
 {
   Q_OBJECT
 
 protected:
   vector<VarPtr> world;
-  VarTreeModel * tmodel;    
+  VarTreeModel * tmodel;
 public:
   VarListPtr geo_vars;
   ConfigWidget();
@@ -159,8 +159,8 @@ public:
   DEF_VALUE(double,Double,DeltaTime)
   DEF_VALUE(int,Int,sendGeometryEvery)
   DEF_VALUE(double,Double,Gravity)
-  DEF_VALUE(std::string,String,VisionMulticastAddr)  
-  DEF_VALUE(int,Int,VisionMulticastPort)  
+  DEF_VALUE(std::string,String,VisionMulticastAddr)
+  DEF_VALUE(int,Int,VisionMulticastPort)
   DEF_VALUE(int,Int,CommandListenPort)
   DEF_VALUE(int,Int,BlueStatusSendPort)
   DEF_VALUE(int,Int,YellowStatusSendPort)
@@ -175,9 +175,9 @@ public:
   DEF_VALUE(double,Double,yellow_team_vanishing)
   DEF_VALUE(std::string, String, plotter_addr)
   DEF_VALUE(int, Int, plotter_port)
-  DEF_VALUE(bool, Bool, plotter)  
+  DEF_VALUE(bool, Bool, plotter)
   void loadRobotSettings(QString team);
-public slots:  
+public slots:
   void loadRobotsSettings();
 };
 
