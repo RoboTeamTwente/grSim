@@ -138,7 +138,7 @@ bool ballCallBack(dGeomID o1,dGeomID o2,PSurface* s)
     return true;
 }
 
-SSLWorld::SSLWorld(QGLWidget* parent,ConfigWidget* _cfg,RobotsFomation *form1,RobotsFomation *form2)
+SSLWorld::SSLWorld(QObject* parent,ConfigWidget* _cfg,RobotsFomation *form1,RobotsFomation *form2)
     : QObject(parent)
 {
     isGLEnabled = false;

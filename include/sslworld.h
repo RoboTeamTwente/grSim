@@ -54,7 +54,7 @@ class SSLWorld : public QObject
 {
     Q_OBJECT
 private:
-    QGLWidget* m_parent;
+    QObject* m_parent;
     int framenum;
     dReal last_dt;
     QList<SendingPacket*> sendQueue;
@@ -63,7 +63,7 @@ private:
 public:
     dReal customDT;
     bool isGLEnabled;
-    SSLWorld(QGLWidget* parent,ConfigWidget* _cfg,RobotsFomation *form1,RobotsFomation *form2);
+    SSLWorld(QObject* parent,ConfigWidget* _cfg,RobotsFomation *form1,RobotsFomation *form2);
     virtual ~SSLWorld();
     void step(dReal dt=-1);
     SSL_WrapperPacket* generatePacket(int cam_id=0);

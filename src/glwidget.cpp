@@ -44,9 +44,7 @@ GLWidget::GLWidget(QObject *parent,ConfigWidget* _cfg)
     Current_robot = 0;
     Current_team = 0;
     cammode = 0;
-    setMouseTracking(true);
 
-    setFocusPolicy(Qt::StrongFocus);
     fullScreen = false;
     ctrl = false;
     alt = false;
