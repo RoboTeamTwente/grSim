@@ -133,6 +133,14 @@ QString dRealToStr(dReal a)
 void MainWindow::update()
 {
     glwidget->step();
+
+    // Print the framerate once every vew frames.
+    if (printFpsCounter <= 0) {
+        std::cout << "FPS:" << glwidget->getFPS() << std::endl;
+        printFpsCounter = 100;
+    } else {
+        printFpsCounter--;
+    }
 }
 
 

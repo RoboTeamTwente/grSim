@@ -63,6 +63,8 @@ private:
     int getInterval();
     QTimer *timer;
 
+    int printFpsCounter;
+
     GLWidget *glwidget;
     ConfigWidget *configwidget;
     ConfigDockWidget *dockconfig;
