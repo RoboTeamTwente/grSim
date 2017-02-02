@@ -56,13 +56,13 @@ refactor variable names
 
   */
 
-#include <QtGui/QApplication>
+#include <QCoreApplication>
 #include "mainwindow.h"
 #include "winmain.h"
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
+    QCoreApplication a(argc, argv);
     MainWindow w;
     return a.exec();
 }
