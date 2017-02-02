@@ -129,8 +129,6 @@ set(SOURCES
     src/configwidget.cpp
     src/statuswidget.cpp
     src/logger.cpp
-    src/robotwidget.cpp
-    src/getpositionwidget.cpp
 )
 
 set(HEADERS
@@ -151,8 +149,6 @@ set(HEADERS
     include/configwidget.h
     include/statuswidget.h
     include/logger.h
-    include/robotwidget.h
-    include/getpositionwidget.h
     include/common.h
     include/config.h
 )
