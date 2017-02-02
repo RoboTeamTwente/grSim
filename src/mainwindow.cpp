@@ -22,7 +22,8 @@ Copyright (C) 2011, Parsian Robotic Center (eew.aut.ac.ir/~parsian/grsim)
 
 int MainWindow::getInterval()
 {
-    return ceil((1000.0f / configwidget->DesiredFPS()));
+    std::cout << "Desired FPS: " << configwidget->DesiredFPS() << std::endl;
+    return ceil((1000.0f / configwidget->DesiredFPS() ));
 }
 
 void MainWindow::customFPS(int fps)
@@ -138,7 +139,7 @@ void MainWindow::update()
     // Print the framerate once every vew frames.
     if (printFpsCounter <= 0) {
         std::cout << "FPS: " << glwidget->getFPS() << std::endl;
-        printFpsCounter = 100;
+        printFpsCounter = 65;
     } else {
         printFpsCounter--;
     }
