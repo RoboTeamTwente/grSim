@@ -151,6 +151,22 @@ MainWindow::MainWindow(QWidget *parent)
     simulatorMenu->addMenu(robotMenu);
     simulatorMenu->addMenu(ballMenu);
 
+    /**
+     * Pre-U workshop code
+     */
+    QMenu *preUMenu = new QMenu("&Pre-U");
+    simulatorMenu->addMenu(preUMenu);
+
+    preUMenu->addAction(tr("Assignment 0" ))->setShortcut(QKeySequence("Alt+0"));
+    preUMenu->addAction(tr("Assignment 1" ))->setShortcut(QKeySequence("Alt+1"));
+    preUMenu->addAction(tr("Assignment 2a"))->setShortcut(QKeySequence("Alt+2"));
+    preUMenu->addAction(tr("Assignment 2b"))->setShortcut(QKeySequence("Alt+Shift+2"));
+    preUMenu->addAction(tr("Assignment 3a"))->setShortcut(QKeySequence("Alt+3"));
+    preUMenu->addAction(tr("Assignment 3b"))->setShortcut(QKeySequence("Alt+Shift+3"));
+    /**
+     * End Pre-U workshop code
+     */
+
     QMenu *helpMenu = new QMenu("&Help");
     QAction* aboutMenu = new QAction("&About", helpMenu);
     menuBar()->addMenu(helpMenu);
@@ -209,6 +225,13 @@ MainWindow::MainWindow(QWidget *parent)
     QObject::connect(robotwidget->getPoseWidget->okBtn,SIGNAL(clicked()),this,SLOT(setCurrentRobotPosition()));
     QObject::connect(glwidget,SIGNAL(robotTurnedOnOff(int,bool)),robotwidget,SLOT(changeRobotOnOff(int,bool)));
     QObject::connect(ballMenu,SIGNAL(triggered(QAction*)),this,SLOT(ballMenuTriggered(QAction*)));
+    /**
+     * Pre-U workshop code
+     */
+    QObject::connect(preUMenu,SIGNAL(triggered(QAction*)),this,SLOT(preUMenuTriggered(QAction*)));
+    /**
+     * End Pre-U workshop code
+     */
     QObject::connect(fullScreenAct,SIGNAL(triggered(bool)),this,SLOT(toggleFullScreen(bool)));
     QObject::connect(glwidget,SIGNAL(toggleFullScreen(bool)),this,SLOT(toggleFullScreen(bool)));
     QObject::connect(glwidget->ssl, SIGNAL(fpsChanged(int)), this, SLOT(customFPS(int)));
@@ -417,6 +440,63 @@ void MainWindow::ballMenuTriggered(QAction* act)
     else if (act->text()==tr("Put on Penalty 1")) glwidget->putBall( p, 0);
     else if (act->text()==tr("Put on Penalty 2")) glwidget->putBall(-p, 0);
 }
+
+/**
+ * Pre-U workshop code
+ */
+void MainWindow::preUMenuTriggered(QAction* act)
+{
+    if (act->text()==tr("Assignment 0")) {
+      for (size_t i = 0; i < 2*ROBOT_COUNT; i++) {
+        glwidget->ssl->robots[i]->setXY(0.4*i, -5.5);
+      }
+      glwidget->ssl->robots[ROBOT_COUNT]->setXY(-2.89, 0.0);
+      glwidget->ssl->robots[ROBOT_COUNT]->setDir(180.0);
+      glwidget->putBall(-3.0, 0.0);
+    } else if (act->text()==tr("Assignment 1")) {
+      for (size_t i = 0; i < 2*ROBOT_COUNT; i++) {
+        glwidget->ssl->robots[i]->setXY(0.4*i, -5.5);
+      }
+      glwidget->ssl->robots[ROBOT_COUNT]->setXY(-1.5, -1.0);
+      glwidget->ssl->robots[ROBOT_COUNT]->setDir(135.0);
+      glwidget->putBall(-3.5, 2.5);
+    } else if (act->text()==tr("Assignment 2a")) {
+      for (size_t i = 0; i < 2*ROBOT_COUNT; i++) {
+        glwidget->ssl->robots[i]->setXY(0.4*i, -5.5);
+      }
+      glwidget->ssl->robots[ROBOT_COUNT]->setXY(-2.89, 0.0);
+      glwidget->ssl->robots[ROBOT_COUNT]->setDir(180.0);
+      glwidget->putBall(-3.0, 0.0);
+    } else if (act->text()==tr("Assignment 2b")) {
+      for (size_t i = 0; i < 2*ROBOT_COUNT; i++) {
+        glwidget->ssl->robots[i]->setXY(0.4*i, -5.5);
+      }
+      glwidget->ssl->robots[ROBOT_COUNT]->setXY(-2.89, 0.0);
+      glwidget->ssl->robots[ROBOT_COUNT]->setDir(180.0);
+      glwidget->ssl->robots[0]->setXY(-3.5, 0.0);
+      glwidget->ssl->robots[0]->setDir(0.0);
+      glwidget->putBall(-3.0, 0.0);
+    } else if (act->text()==tr("Assignment 3a")) {
+      for (size_t i = 0; i < 2*ROBOT_COUNT; i++) {
+        glwidget->ssl->robots[i]->setXY(0.4*i, -5.5);
+      }
+      glwidget->ssl->robots[ROBOT_COUNT]->setXY(-1.5, -1.0);
+      glwidget->ssl->robots[ROBOT_COUNT]->setDir(135.0);
+      glwidget->putBall(-3.5, 2.5);
+    } else if (act->text()==tr("Assignment 3b")) {
+      for (size_t i = 0; i < 2*ROBOT_COUNT; i++) {
+        glwidget->ssl->robots[i]->setXY(0.4*i, -5.5);
+      }
+      glwidget->ssl->robots[ROBOT_COUNT]->setXY(-1.5, -1.0);
+      glwidget->ssl->robots[ROBOT_COUNT]->setDir(135.0);
+      glwidget->ssl->robots[0]->setXY(-4.2, 1.8);
+      glwidget->ssl->robots[0]->setDir(45.0);
+      glwidget->putBall(-3.5, 2.5);
+    }
+}
+/**
+ * End Pre-U workshop code
+ */
 
 void MainWindow::toggleFullScreen(bool a)
 {

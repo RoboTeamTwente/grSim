@@ -876,7 +876,6 @@ RobotsFomation::RobotsFomation(int type)
                                            -4.9, -4.9, -4.9, -4.9, -4.9, -4.9};
         setAll(teamPosX,teamPosY);
     }
-
 }
 
 void RobotsFomation::loadFromFile(const QString& filename)
