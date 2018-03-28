@@ -453,6 +453,9 @@ void MainWindow::preUMenuTriggered(QAction* act)
       glwidget->ssl->robots[ROBOT_COUNT]->setXY(-2.89, 0.0);
       glwidget->ssl->robots[ROBOT_COUNT]->setDir(180.0);
       glwidget->putBall(-3.0, 0.0);
+      glwidget->ssl->g->setViewpoint(-8.0, 0.0, 3.0, 0.0, 0.0, 0.0);
+      glwidget->ssl->g->lookAt(-4.5, 0.0, 0.0);
+      glwidget->ssl->g->zoomCamera(-1.0);
     } else if (act->text()==tr("Assignment 1")) {
       for (size_t i = 0; i < 2*ROBOT_COUNT; i++) {
         glwidget->ssl->robots[i]->setXY(0.4*i, -5.5);
@@ -460,6 +463,9 @@ void MainWindow::preUMenuTriggered(QAction* act)
       glwidget->ssl->robots[ROBOT_COUNT]->setXY(-1.5, -1.0);
       glwidget->ssl->robots[ROBOT_COUNT]->setDir(135.0);
       glwidget->putBall(-3.5, 2.5);
+      glwidget->ssl->g->setViewpoint(-8.0, 0.0, 3.0, 0.0, 0.0, 0.0);
+      glwidget->ssl->g->lookAt(-4.5, 0.0, 0.0);
+      glwidget->ssl->g->zoomCamera(-1.0);
     } else if (act->text()==tr("Assignment 2a")) {
       for (size_t i = 0; i < 2*ROBOT_COUNT; i++) {
         glwidget->ssl->robots[i]->setXY(0.4*i, -5.5);
@@ -467,6 +473,8 @@ void MainWindow::preUMenuTriggered(QAction* act)
       glwidget->ssl->robots[ROBOT_COUNT]->setXY(-2.89, 0.0);
       glwidget->ssl->robots[ROBOT_COUNT]->setDir(180.0);
       glwidget->putBall(-3.0, 0.0);
+      glwidget->ssl->g->setViewpoint(-5.0, 4.0, 1.0, 0.0, 0.0, 0.0);
+      glwidget->ssl->g->lookAt(-4.5, 0.0, 0.0);
     } else if (act->text()==tr("Assignment 2b")) {
       for (size_t i = 0; i < 2*ROBOT_COUNT; i++) {
         glwidget->ssl->robots[i]->setXY(0.4*i, -5.5);
@@ -476,6 +484,8 @@ void MainWindow::preUMenuTriggered(QAction* act)
       glwidget->ssl->robots[0]->setXY(-3.5, 0.0);
       glwidget->ssl->robots[0]->setDir(0.0);
       glwidget->putBall(-3.0, 0.0);
+      glwidget->ssl->g->setViewpoint(-5.0, 4.0, 1.0, 0.0, 0.0, 0.0);
+      glwidget->ssl->g->lookAt(-4.5, 0.0, 0.0);
     } else if (act->text()==tr("Assignment 3a")) {
       for (size_t i = 0; i < 2*ROBOT_COUNT; i++) {
         glwidget->ssl->robots[i]->setXY(0.4*i, -5.5);
@@ -483,6 +493,8 @@ void MainWindow::preUMenuTriggered(QAction* act)
       glwidget->ssl->robots[ROBOT_COUNT]->setXY(-1.5, -1.0);
       glwidget->ssl->robots[ROBOT_COUNT]->setDir(135.0);
       glwidget->putBall(-3.5, 2.5);
+      glwidget->ssl->g->setViewpoint(0.0, -1.0, 1.0, 0.0, 0.0, 0.0);
+      glwidget->ssl->g->lookAt(-4.5, 0.5, 0.0);
     } else if (act->text()==tr("Assignment 3b")) {
       for (size_t i = 0; i < 2*ROBOT_COUNT; i++) {
         glwidget->ssl->robots[i]->setXY(0.4*i, -5.5);
@@ -492,6 +504,8 @@ void MainWindow::preUMenuTriggered(QAction* act)
       glwidget->ssl->robots[0]->setXY(-4.2, 1.8);
       glwidget->ssl->robots[0]->setDir(45.0);
       glwidget->putBall(-3.5, 2.5);
+      glwidget->ssl->g->setViewpoint(0.0, -1.0, 1.0, 0.0, 0.0, 0.0);
+      glwidget->ssl->g->lookAt(-4.5, 0.5, 0.0);
     }
 }
 /**
