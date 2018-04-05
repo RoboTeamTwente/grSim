@@ -67,6 +67,6 @@ int main(int argc, char *argv[])
     QCoreApplication::setApplicationName("grSim");
     QApplication a(argc, argv);
     MainWindow w;
-    w.show();
+    w.hide();
     return a.exec();
 }
