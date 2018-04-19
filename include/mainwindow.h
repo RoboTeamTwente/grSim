@@ -59,6 +59,13 @@ public slots:
 
     void restartSimulator();
     void ballMenuTriggered(QAction* act);
+    /**
+     * Pre-U workshop code
+     */
+    void preUMenuTriggered(QAction* act);
+    /**
+     * End Pre-U workshop code
+     */
     void toggleFullScreen(bool);
     void setCurrentRobotPosition();
     void takeSnapshot();

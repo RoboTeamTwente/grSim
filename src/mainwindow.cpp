@@ -154,6 +154,23 @@ MainWindow::MainWindow(QWidget *parent)
     simulatorMenu->addMenu(robotMenu);
     simulatorMenu->addMenu(ballMenu);
 
+    /**
+     * Pre-U workshop code
+     */
+    QMenu *preUMenu = new QMenu("&Pre-U");
+    simulatorMenu->addMenu(preUMenu);
+
+    preUMenu->addAction(tr("Assignment 0" ))->setShortcut(QKeySequence("Alt+0"));
+    preUMenu->addAction(tr("Assignment 1" ))->setShortcut(QKeySequence("Alt+1"));
+    preUMenu->addAction(tr("Assignment 2a"))->setShortcut(QKeySequence("Alt+2"));
+    preUMenu->addAction(tr("Assignment 2b"))->setShortcut(QKeySequence("Alt+Shift+2"));
+    preUMenu->addAction(tr("Assignment 3a"))->setShortcut(QKeySequence("Alt+3"));
+    preUMenu->addAction(tr("Assignment 3b"))->setShortcut(QKeySequence("Alt+Shift+3"));
+    preUMenu->addAction(tr("Assignment 4"))->setShortcut(QKeySequence("Alt+4"));
+    /**
+     * End Pre-U workshop code
+     */
+
     QMenu *helpMenu = new QMenu("&Help");
     QAction* aboutMenu = new QAction("&About", helpMenu);
     menuBar()->addMenu(helpMenu);
@@ -212,32 +229,47 @@ MainWindow::MainWindow(QWidget *parent)
     QObject::connect(robotwidget->getPoseWidget->okBtn,SIGNAL(clicked()),this,SLOT(setCurrentRobotPosition()));
     QObject::connect(glwidget,SIGNAL(robotTurnedOnOff(int,bool)),robotwidget,SLOT(changeRobotOnOff(int,bool)));
     QObject::connect(ballMenu,SIGNAL(triggered(QAction*)),this,SLOT(ballMenuTriggered(QAction*)));
+    /**
+     * Pre-U workshop code
+     */
+    QObject::connect(preUMenu,SIGNAL(triggered(QAction*)),this,SLOT(preUMenuTriggered(QAction*)));
+    /**
+     * End Pre-U workshop code
+     */
     QObject::connect(fullScreenAct,SIGNAL(triggered(bool)),this,SLOT(toggleFullScreen(bool)));
     QObject::connect(glwidget,SIGNAL(toggleFullScreen(bool)),this,SLOT(toggleFullScreen(bool)));
     QObject::connect(glwidget->ssl, SIGNAL(fpsChanged(int)), this, SLOT(customFPS(int)));
     QObject::connect(aboutMenu, SIGNAL(triggered()), this, SLOT(showAbout()));
     //config related signals
+    QObject::connect(configwidget->v_BallRadius.get(), SIGNAL(wasEdited(VarPtr)), this, SLOT(restartSimulator()));
     QObject::connect(configwidget->v_BallMass.get(), SIGNAL(wasEdited(VarPtr)), this, SLOT(changeBallMass()));
-    QObject::connect(configwidget->v_BallBounce.get(), SIGNAL(wasEdited(VarPtr)), this, SLOT(changeBallGroundSurface()));
-    QObject::connect(configwidget->v_BallBounceVel.get(), SIGNAL(wasEdited(VarPtr)), this, SLOT(changeBallGroundSurface()));
     QObject::connect(configwidget->v_BallFriction.get(), SIGNAL(wasEdited(VarPtr)), this, SLOT(changeBallGroundSurface()));
     QObject::connect(configwidget->v_BallSlip.get(), SIGNAL(wasEdited(VarPtr)), this, SLOT(changeBallGroundSurface()));
-    QObject::connect(configwidget->v_BallAngularDamp.get(), SIGNAL(wasEdited(VarPtr)), this, SLOT(changeBallDamping()));
+    QObject::connect(configwidget->v_BallBounce.get(), SIGNAL(wasEdited(VarPtr)), this, SLOT(changeBallGroundSurface()));
+    QObject::connect(configwidget->v_BallBounceVel.get(), SIGNAL(wasEdited(VarPtr)), this, SLOT(changeBallGroundSurface()));
     QObject::connect(configwidget->v_BallLinearDamp.get(), SIGNAL(wasEdited(VarPtr)), this, SLOT(changeBallDamping()));
+    QObject::connect(configwidget->v_BallAngularDamp.get(), SIGNAL(wasEdited(VarPtr)), this, SLOT(changeBallDamping()));
     QObject::connect(configwidget->v_Gravity.get(),  SIGNAL(wasEdited(VarPtr)), this, SLOT(changeGravity()));
 
     //geometry config vars
     QObject::connect(configwidget->v_DesiredFPS.get(), SIGNAL(wasEdited(VarPtr)), this, SLOT(changeTimer()));
-    QObject::connect(configwidget->v_BallRadius.get(), SIGNAL(wasEdited(VarPtr)), this, SLOT(restartSimulator()));
+    QObject::connect(configwidget->v_Field_Line_Width.get(), SIGNAL(wasEdited(VarPtr)), this, SLOT(restartSimulator()));
     QObject::connect(configwidget->v_Field_Length.get(), SIGNAL(wasEdited(VarPtr)), this, SLOT(restartSimulator()));
-    QObject::connect(configwidget->v_Field_Margin.get(), SIGNAL(wasEdited(VarPtr)), this, SLOT(restartSimulator()));
     QObject::connect(configwidget->v_Field_Width.get(), SIGNAL(wasEdited(VarPtr)), this, SLOT(restartSimulator()));
-    QObject::connect(configwidget->v_Field_Penalty_Line.get(), SIGNAL(wasEdited(VarPtr)), this, SLOT(restartSimulator()));
-    QObject::connect(configwidget->v_Field_Penalty_Point.get(), SIGNAL(wasEdited(VarPtr)), this, SLOT(restartSimulator()));
-    QObject::connect(configwidget->v_Field_Penalty_Rad.get(), SIGNAL(wasEdited(VarPtr)), this, SLOT(restartSimulator()));
     QObject::connect(configwidget->v_Field_Rad.get(), SIGNAL(wasEdited(VarPtr)), this, SLOT(restartSimulator()));
-    QObject::connect(configwidget->v_BlueTeam.get(), SIGNAL(wasEdited(VarPtr)), this, SLOT(restartSimulator()));
+    QObject::connect(configwidget->v_Field_Free_Kick.get(), SIGNAL(wasEdited(VarPtr)), this, SLOT(restartSimulator()));
+    QObject::connect(configwidget->v_Field_Penalty_Width.get(), SIGNAL(wasEdited(VarPtr)), this, SLOT(restartSimulator()));
+    QObject::connect(configwidget->v_Field_Penalty_Depth.get(), SIGNAL(wasEdited(VarPtr)), this, SLOT(restartSimulator()));
+    QObject::connect(configwidget->v_Field_Penalty_Point.get(), SIGNAL(wasEdited(VarPtr)), this, SLOT(restartSimulator()));
+    QObject::connect(configwidget->v_Field_Margin.get(), SIGNAL(wasEdited(VarPtr)), this, SLOT(restartSimulator()));
+    QObject::connect(configwidget->v_Field_Referee_Margin.get(), SIGNAL(wasEdited(VarPtr)), this, SLOT(restartSimulator()));
+    QObject::connect(configwidget->v_Wall_Thickness.get(), SIGNAL(wasEdited(VarPtr)), this, SLOT(restartSimulator()));
+    QObject::connect(configwidget->v_Goal_Thickness.get(), SIGNAL(wasEdited(VarPtr)), this, SLOT(restartSimulator()));
+    QObject::connect(configwidget->v_Goal_Depth.get(), SIGNAL(wasEdited(VarPtr)), this, SLOT(restartSimulator()));
+    QObject::connect(configwidget->v_Goal_Width.get(), SIGNAL(wasEdited(VarPtr)), this, SLOT(restartSimulator()));
+    QObject::connect(configwidget->v_Goal_Height.get(), SIGNAL(wasEdited(VarPtr)), this, SLOT(restartSimulator()));
     QObject::connect(configwidget->v_YellowTeam.get(), SIGNAL(wasEdited(VarPtr)), this, SLOT(restartSimulator()));
+    QObject::connect(configwidget->v_BlueTeam.get(), SIGNAL(wasEdited(VarPtr)), this, SLOT(restartSimulator()));
 
     //network
     QObject::connect(configwidget->v_VisionMulticastAddr.get(), SIGNAL(wasEdited(VarPtr)), this, SLOT(reconnectVisionSocket()));
@@ -415,6 +447,100 @@ void MainWindow::ballMenuTriggered(QAction* act)
     else if (act->text()==tr("Put on Penalty 1")) glwidget->putBall( p, 0);
     else if (act->text()==tr("Put on Penalty 2")) glwidget->putBall(-p, 0);
 }
+
+/**
+ * Pre-U workshop code
+ */
+void MainWindow::preUMenuTriggered(QAction* act)
+{
+    glwidget->ssl->robots[0]->setXY(-3.0, -2.0);
+    glwidget->ssl->robots[0]->setDir(201);
+    glwidget->ssl->robots[1]->setXY(4.5, -2.7);
+    glwidget->ssl->robots[1]->setDir(353);
+    glwidget->ssl->robots[2]->setXY(3.2, -0.6);
+    glwidget->ssl->robots[2]->setDir(163);
+    glwidget->ssl->robots[3]->setXY(5.3, 4.1);
+    glwidget->ssl->robots[3]->setDir(62);
+    glwidget->ssl->robots[4]->setXY(-1.9, 3.0);
+    glwidget->ssl->robots[4]->setDir(341);
+    glwidget->ssl->robots[5]->setXY(-5.0, -2.4);
+    glwidget->ssl->robots[5]->setDir(242);
+    glwidget->ssl->robots[6]->setXY(4.8, 3.0);
+    glwidget->ssl->robots[6]->setDir(151);
+    glwidget->ssl->robots[7]->setXY(3.2, -2.3);
+    glwidget->ssl->robots[7]->setDir(62);
+    glwidget->ssl->robots[9]->setXY(3.4, -2.7);
+    glwidget->ssl->robots[9]->setDir(16);
+    glwidget->ssl->robots[10]->setXY(3.1, 0.0);
+    glwidget->ssl->robots[10]->setDir(351);
+    glwidget->ssl->robots[11]->setXY(4.5, 3.5);
+    glwidget->ssl->robots[11]->setDir(251);
+    glwidget->ssl->robots[12]->setXY(-2.6, -0.4);
+    glwidget->ssl->robots[12]->setDir(152);
+    glwidget->ssl->robots[13]->setXY(2.6, -2.6);
+    glwidget->ssl->robots[13]->setDir(123);
+    glwidget->ssl->robots[14]->setXY(-5.1, 3.5);
+    glwidget->ssl->robots[14]->setDir(51);
+    glwidget->ssl->robots[15]->setXY(1.5, 2.5);
+    glwidget->ssl->robots[15]->setDir(61);
+    if (act->text()==tr("Assignment 0")) {
+      glwidget->ssl->robots[ROBOT_COUNT]->setXY(-2.89, 0.0);
+      glwidget->ssl->robots[ROBOT_COUNT]->setDir(180.0);
+      glwidget->putBall(-3.0, 0.0);
+      glwidget->ssl->g->setViewpoint(-8.0, 0.0, 3.0, 0.0, 0.0, 0.0);
+      glwidget->ssl->g->lookAt(-4.5, 0.0, 0.0);
+      glwidget->ssl->g->zoomCamera(-1.0);
+    } else if (act->text()==tr("Assignment 1")) {
+      glwidget->ssl->robots[ROBOT_COUNT]->setXY(-1.5, -1.0);
+      glwidget->ssl->robots[ROBOT_COUNT]->setDir(135.0);
+      glwidget->putBall(-3.5, 2.5);
+      glwidget->ssl->g->setViewpoint(-8.0, 0.0, 3.0, 0.0, 0.0, 0.0);
+      glwidget->ssl->g->lookAt(-4.5, 0.0, 0.0);
+      glwidget->ssl->g->zoomCamera(-1.0);
+    } else if (act->text()==tr("Assignment 2a")) {
+      glwidget->ssl->robots[ROBOT_COUNT]->setXY(-2.89, 0.0);
+      glwidget->ssl->robots[ROBOT_COUNT]->setDir(180.0);
+      glwidget->putBall(-3.0, 0.0);
+      glwidget->ssl->g->setViewpoint(-5.0, 4.0, 1.0, 0.0, 0.0, 0.0);
+      glwidget->ssl->g->lookAt(-4.5, 0.0, 0.0);
+    } else if (act->text()==tr("Assignment 2b")) {
+      glwidget->ssl->robots[ROBOT_COUNT]->setXY(-2.89, 0.0);
+      glwidget->ssl->robots[ROBOT_COUNT]->setDir(180.0);
+      glwidget->ssl->robots[0]->setXY(-3.5, 0.0);
+      glwidget->ssl->robots[0]->setDir(0.0);
+      glwidget->putBall(-3.0, 0.0);
+      glwidget->ssl->g->setViewpoint(-5.0, 4.0, 1.0, 0.0, 0.0, 0.0);
+      glwidget->ssl->g->lookAt(-4.5, 0.0, 0.0);
+    } else if (act->text()==tr("Assignment 3a")) {
+      glwidget->ssl->robots[ROBOT_COUNT]->setXY(-1.5, -1.0);
+      glwidget->ssl->robots[ROBOT_COUNT]->setDir(135.0);
+      glwidget->putBall(-3.5, 2.5);
+      glwidget->ssl->g->setViewpoint(0.0, -1.0, 1.0, 0.0, 0.0, 0.0);
+      glwidget->ssl->g->lookAt(-4.5, 0.5, 0.0);
+    } else if (act->text()==tr("Assignment 3b")) {
+      glwidget->ssl->robots[ROBOT_COUNT]->setXY(-1.5, -1.0);
+      glwidget->ssl->robots[ROBOT_COUNT]->setDir(135.0);
+      glwidget->ssl->robots[0]->setXY(-4.2, 1.8);
+      glwidget->ssl->robots[0]->setDir(45.0);
+      glwidget->putBall(-3.5, 2.5);
+      glwidget->ssl->g->setViewpoint(0.0, -1.0, 1.0, 0.0, 0.0, 0.0);
+      glwidget->ssl->g->lookAt(-4.5, 0.5, 0.0);
+    } else if (act->text()==tr("Assignment 4")) {
+      glwidget->ssl->robots[ROBOT_COUNT]->setXY(-3.8, 1.5);
+      glwidget->ssl->robots[ROBOT_COUNT]->setDir(225.0);
+      glwidget->ssl->robots[ROBOT_COUNT+1]->setXY(-4.5, -1.0);
+      glwidget->ssl->robots[ROBOT_COUNT+1]->setDir(135.0);
+      glwidget->ssl->robots[0]->setXY(-5.0, 0.2);
+      glwidget->ssl->robots[0]->setDir(45.0);
+      glwidget->putBall(-4.2, 1.2);
+      glwidget->ssl->g->setViewpoint(-8.0, 0.0, 3.0, 0.0, 0.0, 0.0);
+      glwidget->ssl->g->lookAt(-4.5, 0.0, 0.0);
+      glwidget->ssl->g->zoomCamera(-1.0);
+    }
+}
+/**
+ * End Pre-U workshop code
+ */
 
 void MainWindow::toggleFullScreen(bool a)
 {
