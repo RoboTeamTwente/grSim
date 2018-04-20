@@ -1,3 +1,5 @@
+#define ASSIGNMENT_ID 3
+
 /*
 grSim - RoboCup Small Size Soccer Robots Simulator
 Copyright (C) 2011, Parsian Robotic Center (eew.aut.ac.ir/~parsian/grsim)
@@ -39,6 +41,7 @@ Copyright (C) 2011, Parsian Robotic Center (eew.aut.ac.ir/~parsian/grsim)
 
 #include "mainwindow.h"
 #include "logger.h"
+
 
 int MainWindow::getInterval()
 {
@@ -290,6 +293,46 @@ MainWindow::MainWindow(QWidget *parent)
     robotwidget->setPicture(glwidget->ssl->robots[robotIndex(glwidget->Current_robot,glwidget->Current_team)]->img);
     robotwidget->id = 0;
     scene = new QGraphicsScene(0,0,800,600);
+
+
+    // WORKSHOP CODE
+
+    // assignmentId is changed by the rtts editor
+    if (ASSIGNMENT_ID == 0) {
+      glwidget->ssl->robots[0]->setXY(1.89, 0.0);
+      glwidget->ssl->robots[0]->setDir(0.0);
+      glwidget->ssl->robots[ROBOT_COUNT]->setXY(30.0, 0.0);
+      glwidget->putBall(2.0, 0.0);
+    } else if (ASSIGNMENT_ID == 1) {
+      glwidget->ssl->robots[0]->setXY(1.5, -1.0);
+      glwidget->ssl->robots[0]->setDir(-45.0);
+      glwidget->ssl->robots[ROBOT_COUNT]->setXY(30.0, 0.0);
+      glwidget->putBall(2.5, 1.5);
+    } else if (ASSIGNMENT_ID == 2) {
+      glwidget->ssl->robots[0]->setXY(1.89, 0.0);
+      glwidget->ssl->robots[0]->setDir(0.0);
+      glwidget->ssl->robots[ROBOT_COUNT]->setXY(30.0, 0.0);
+      glwidget->putBall(2.0, 0.0);
+    } else if (ASSIGNMENT_ID == 3) {
+      glwidget->ssl->robots[0]->setXY(1.89, 0.0);
+      glwidget->ssl->robots[0]->setDir(0.0);
+      glwidget->ssl->robots[ROBOT_COUNT]->setXY(2.5, 0.0);
+      glwidget->ssl->robots[ROBOT_COUNT]->setDir(180.0);
+      glwidget->putBall(2.0, 0.0);
+    } else if (ASSIGNMENT_ID == 4) {
+      glwidget->ssl->robots[0]->setXY(1.5, -1.0);
+      glwidget->ssl->robots[0]->setDir(135.0);
+      glwidget->ssl->robots[ROBOT_COUNT]->setXY(30.0, 0.0);
+      glwidget->putBall(2.5, 1.5);
+    } else if (ASSIGNMENT_ID == 5) {
+      glwidget->ssl->robots[0]->setXY(1.5, -1.0);
+      glwidget->ssl->robots[0]->setDir(135.0);
+      glwidget->ssl->robots[ROBOT_COUNT]->setXY(2.8, 1.3);
+      glwidget->ssl->robots[ROBOT_COUNT]->setDir(135.0);
+      glwidget->putBall(2.5, 1.5);
+    }
+
+    // WORKSHOP CODE
 }
 
 MainWindow::~MainWindow()
@@ -499,6 +542,7 @@ void MainWindow::preUMenuTriggered(QAction* act)
       glwidget->ssl->g->zoomCamera(-1.0);
     } else if (act->text()==tr("Assignment 2a")) {
       glwidget->ssl->robots[ROBOT_COUNT]->setXY(-2.89, 0.0);
+      //test
       glwidget->ssl->robots[ROBOT_COUNT]->setDir(180.0);
       glwidget->putBall(-3.0, 0.0);
       glwidget->ssl->g->setViewpoint(-5.0, 4.0, 1.0, 0.0, 0.0, 0.0);

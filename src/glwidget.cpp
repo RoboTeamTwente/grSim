@@ -41,6 +41,7 @@ GLWidget::GLWidget(QWidget *parent,ConfigWidget* _cfg)
     forms[3] = new RobotsFomation(2);  //inside type 2
     forms[4] = new RobotsFomation(3);  //inside type 1
     //forms[5] = new RobotsFomation(4);  //inside type 2
+
     ssl = new SSLWorld(this,cfg,forms[2],forms[2]);
     Current_robot = 0;
     Current_team = 0;
