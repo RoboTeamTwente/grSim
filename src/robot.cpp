@@ -566,7 +566,7 @@ std::vector<double> Robot::pwm2Motor(std::vector<double> power){
     return desiredVel;
 }
 double Robot::constrainAngle(double x){
-    x= fmod(x+M_PI,2*M_PI);
+    x=fmod(x+M_PI,2*M_PI);
     if (x<0)
         x+=2*M_PI;
     return x-M_PI;
@@ -635,40 +635,14 @@ void Robot::robotToWorldReferenceFrame(dReal &vx, dReal &vy, dReal &vw)
     dReal vyNew = vx*sin(xSensW) + vy*cos(xSensW);
     vx = vxNew;
     vy = vyNew;
-    dReal Pvw = constrainAngle(vw - xSensW);
-    dReal Dvw = constrainAngle(xSensW - xSensWPrev);
+    dReal deltaAngle = vw - xSensW;
+    while (deltaAngle<0) deltaAngle+=2.0*M_PI;
+    while (deltaAngle>2*M_PI) deltaAngle-=2.0*M_PI;
+    if (deltaAngle>M_PI) deltaAngle = -1*(2.0*M_PI - deltaAngle);
+    dReal Pvw = deltaAngle;
+    dReal Dvw = (xSensW - xSensWPrev)*60.0;
     dReal P = 3.0 * Pvw;
     dReal D = 0.5 * Dvw;
-    vw = P + D;
+    vw = (P + D);
     xSensWPrev = xSensW;
 }
-
-//double Controller::controlPIR(double err, double rate) {
-//    double value_P = this->controlP(err);
-//    double value_I = this->controlI(err);
-//    double value_R = this->controlR(rate);
-//    return value_P + value_I + value_R;
-//}
-//
-//double Controller::controlP(double err) {
-//    double value_P = this->kP * err;
-//    return value_P;
-//}
-//
-//double Controller::controlI(double err) {
-//    this->initial_I += err * this->timeDiff;
-//    double value_I = this->kI * this->initial_I;
-//    return value_I;
-//}
-//
-//double Controller::controlD(double err) {
-//    double rateErr = (err - this->prev_error) / this->timeDiff;
-//    double value_D = this->kD * rateErr;
-//    this->prev_error = err;
-//    return value_D;
-//}
-//
-//double Controller::controlR(double rate) {
-//    double value_R = this->kD * rate * -1;
-//    return value_R;
-//}
