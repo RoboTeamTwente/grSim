@@ -469,10 +469,10 @@ void Robot::setAngle(dReal vx, dReal vy, dReal vw) {
     double xSensW=constrainAngle((double) getDir()/180.0*M_PI);
     // Rotate to local frame of reference
     vectorRotate(xSensW,&vx,&vy);
-    double assumed_delay=cfg->sendDelay()/1000; // seconds
-    static double prevYaw=0;
-    double yawVel=constrainAngle(xSensW-prevYaw)*60; //TODO: Fix time difference?
-    prevYaw=xSensW;
+    double assumed_delay=cfg->sendDelay()/1000.0; // seconds
+    static double prevXSensW=0;
+    double yawVel=constrainAngle(xSensW-prevXSensW)*60; //TODO: Fix time difference?
+    prevXSensW=xSensW;
     double comp_dir=yawVel*assumed_delay;
     vectorRotate(comp_dir,&vx,&vy);
 
@@ -486,7 +486,7 @@ void Robot::setAngle(dReal vx, dReal vy, dReal vw) {
     std::vector<double> output=pwm2Motor(pwm);
     std::cout<<"Direction:" << xSensW <<std::endl;
     for (int i = 0; i < 4; ++ i) {
-        std::cout<<"Wheel: " <<i <<" : " <<output[i]<< " ";
+        std::cout<<"New Wheel: " <<i <<" : " <<output[i]<< " ";
     }
     std::cout<<std::endl;
     setSpeed(0 , output[3]); //Left Front
