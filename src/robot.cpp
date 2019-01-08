@@ -442,12 +442,6 @@ void Robot::setSpeedOLD(dReal vx, dReal vy, dReal vw)
     dReal dw3 =  (1.0 / cfg->robotSettings.WheelRadius) * (( (cfg->robotSettings.RobotRadius * vw) - (vx * sin(motorAlpha[2])) + (vy * cos(motorAlpha[2]))) );
     dReal dw4 =  (1.0 / cfg->robotSettings.WheelRadius) * (( (cfg->robotSettings.RobotRadius * vw) - (vx * sin(motorAlpha[3])) + (vy * cos(motorAlpha[3]))) );
 
-
-    std::cout<<"Wheel: " <<0 <<" -" <<dw1<< " ";
-    std::cout<<"Wheel: " <<1 <<" -" <<dw2<< " ";
-    std::cout<<"Wheel: " <<2 <<" -" <<dw3<< " ";
-    std::cout<<"Wheel: " <<3 <<" -" <<dw4<< " ";
-    std::cout<<std::endl;
     setSpeed(0 , dw1);
     setSpeed(1 , dw2);
     setSpeed(2 , dw3);
@@ -485,11 +479,8 @@ void Robot::setAngle(dReal vx, dReal vy, dReal vw) {
     Fw=Fw*0.5;
     std::vector<dReal> pwm=body2Wheels(Fx,Fy,Fw);
     std::vector<dReal> output=pwm2Motor(pwm);
-    std::cout<<"Direction:" << xSensW <<std::endl;
     for (int i = 0; i < 4; ++ i) {
-        //std::cout<<"New Wheel: " << i <<" : " <<output[i]<< " ";
     }
-    std::cout<<std::endl;
     setSpeed(0 , output[3]); //Left Front
     setSpeed(1 , output[2]); //Left back
     setSpeed(2 , output[1]); //Right Back
@@ -505,7 +496,6 @@ std::vector<double> Robot::body2Wheels(dReal Fx,dReal Fy,dReal Fw){
         float T_CUTOFF=(PWM_CUTOFF+0.1F)*4*R/r;
         std::vector<double> output;
         if ((fabs(Fw)<T_CUTOFF) && (fabs(Fw)>T_CUTOFF/2-0.1F)){ //only using 2 motors for rotation, output doubled.
-            std::cout<< "Using only 2 wheels for rotation"<<std::endl;
             output.push_back((1/sin60*Fx+1/cos60*Fy+2/R*Fw)*r/4);
             output.push_back((1/sin60*Fx-1/cos60*Fy)*r/4);
             output.push_back((-1/sin60*Fx-1/cos60*Fy+2/R*Fw)*r/4);
@@ -607,25 +597,7 @@ void Robot::vectorRotate(double yaw, double* x, double* y) {
 void Robot::setSpeed(dReal vx, dReal vy, dReal vw)
 {
     robotToWorldReferenceFrame(vx, vy, vw);
-    // Calculate Motor Speeds
-    dReal _DEG2RAD = M_PI / 180.0;
-    dReal motorAlpha[4] = {cfg->robotSettings.Wheel1Angle * _DEG2RAD, cfg->robotSettings.Wheel2Angle * _DEG2RAD, cfg->robotSettings.Wheel3Angle * _DEG2RAD, cfg->robotSettings.Wheel4Angle * _DEG2RAD};
-
-    dReal dw1 =  (1.0 / cfg->robotSettings.WheelRadius) * (( (cfg->robotSettings.RobotRadius * vw) - (vx * sin(motorAlpha[0])) + (vy * cos(motorAlpha[0]))) );
-    dReal dw2 =  (1.0 / cfg->robotSettings.WheelRadius) * (( (cfg->robotSettings.RobotRadius * vw) - (vx * sin(motorAlpha[1])) + (vy * cos(motorAlpha[1]))) );
-    dReal dw3 =  (1.0 / cfg->robotSettings.WheelRadius) * (( (cfg->robotSettings.RobotRadius * vw) - (vx * sin(motorAlpha[2])) + (vy * cos(motorAlpha[2]))) );
-    dReal dw4 =  (1.0 / cfg->robotSettings.WheelRadius) * (( (cfg->robotSettings.RobotRadius * vw) - (vx * sin(motorAlpha[3])) + (vy * cos(motorAlpha[3]))) );
-
-
-    std::cout<<"Wheel: " <<0 <<" -" <<dw1<< " ";
-    std::cout<<"Wheel: " <<1 <<" -" <<dw2<< " ";
-    std::cout<<"Wheel: " <<2 <<" -" <<dw3<< " ";
-    std::cout<<"Wheel: " <<3 <<" -" <<dw4<< " ";
-    std::cout<<std::endl;
-    setSpeed(0 , dw1);
-    setSpeed(1 , dw2);
-    setSpeed(2 , dw3);
-    setSpeed(3 , dw4);
+    setSpeedOLD(vx, vy, vw);
 }
 void Robot::robotToWorldReferenceFrame(dReal &vx, dReal &vy, dReal &vw)
 {
@@ -640,7 +612,8 @@ void Robot::robotToWorldReferenceFrame(dReal &vx, dReal &vy, dReal &vw)
     while (deltaAngle>2*M_PI) deltaAngle-=2.0*M_PI;
     if (deltaAngle>M_PI) deltaAngle = -1*(2.0*M_PI - deltaAngle);
     dReal Pvw = deltaAngle;
-    dReal Dvw = (xSensW - xSensWPrev)*60.0;
+    dReal Dvw = (xSensW - xSensWPrev)*-60.0;
+    std::cout << "Dvw: " << Dvw << "\n                           Pvw: " << Pvw << "\n                                         vw: " << vw << std::endl;
     dReal P = 3.0 * Pvw;
     dReal D = 0.5 * Dvw;
     vw = (P + D);
