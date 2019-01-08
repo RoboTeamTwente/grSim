@@ -33,6 +33,8 @@ class Robot
     dReal m_x,m_y,m_z;
     dReal m_r,m_g,m_b;
     dReal m_dir;
+    dReal xSensW;
+    dReal xSensWPrev;
     int m_rob_id;
     bool firsttime;
     bool last_state;
@@ -92,7 +94,7 @@ public:
     void step();
     void drawLabel();
     void setSpeed(int i,dReal s); //i = 0,1,2,3
-    void setSpeed(dReal vx, dReal vy, dReal vw);
+    void setSpeedOLD(dReal vx, dReal vy, dReal vw);
     dReal getSpeed(int i);
     void incSpeed(int i,dReal v);
     void resetSpeeds();
@@ -105,6 +107,8 @@ public:
     PBall* getBall();
 
     void setAngle(dReal vx, dReal vy, dReal vw);
+    void setSpeed(dReal vx, dReal vy, dReal vw);
+    void robotToWorldReferenceFrame(dReal &vx, dReal &vy, dReal &vw);
     std::vector<double> body2Wheels(dReal Fx, dReal Fy, dReal Fw);
     dReal scaleLimit(dReal Fx, dReal Fy, dReal Fw, dReal limit);
     double angleControl(double angleRef, double yaw);

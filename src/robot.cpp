@@ -16,6 +16,8 @@ Copyright (C) 2011, Parsian Robotic Center (eew.aut.ac.ir/~parsian/grsim)
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <include/robot.h>
+
 #include "robot.h"
 
 // ang2 = position angle
@@ -429,7 +431,7 @@ void Robot::setSpeed(int i,dReal s)
         wheels[i]->speed = s;
 }
 
-void Robot::setSpeed(dReal vx, dReal vy, dReal vw)
+void Robot::setSpeedOLD(dReal vx, dReal vy, dReal vw)
 {
     // Calculate Motor Speeds
     dReal _DEG2RAD = M_PI / 180.0;
@@ -466,14 +468,13 @@ void Robot::incSpeed(int i,dReal v)
 
 //Implements our angle control cycle
 void Robot::setAngle(dReal vx, dReal vy, dReal vw) {
-    double xSensW=constrainAngle((double) getDir()/180.0*M_PI);
+    xSensW=constrainAngle((double) getDir()/180.0*M_PI);
     // Rotate to local frame of reference
     vectorRotate(xSensW,&vx,&vy);
-    double assumed_delay=cfg->sendDelay()/1000.0; // seconds
-    static double prevXSensW=0;
-    double yawVel=constrainAngle(xSensW-prevXSensW)*60; //TODO: Fix time difference?
-    prevXSensW=xSensW;
-    double comp_dir=yawVel*assumed_delay;
+    dReal assumed_delay=cfg->sendDelay()/1000.0; // seconds
+    dReal yawVel=constrainAngle(xSensW-xSensWPrev)*60; //TODO: Fix time difference?
+    xSensWPrev=xSensW;
+    dReal comp_dir=yawVel*assumed_delay;
     vectorRotate(comp_dir,&vx,&vy);
 
     dReal Fx=vx*1500, Fy=vy*2000; //MAGIC NUMBERS
@@ -482,11 +483,11 @@ void Robot::setAngle(dReal vx, dReal vy, dReal vw) {
     Fx=scale*Fx;
     Fy=scale*Fy;
     Fw=Fw*0.5;
-    std::vector<double> pwm=body2Wheels(Fx,Fy,Fw);
-    std::vector<double> output=pwm2Motor(pwm);
+    std::vector<dReal> pwm=body2Wheels(Fx,Fy,Fw);
+    std::vector<dReal> output=pwm2Motor(pwm);
     std::cout<<"Direction:" << xSensW <<std::endl;
     for (int i = 0; i < 4; ++ i) {
-        std::cout<<"New Wheel: " <<i <<" : " <<output[i]<< " ";
+        //std::cout<<"New Wheel: " << i <<" : " <<output[i]<< " ";
     }
     std::cout<<std::endl;
     setSpeed(0 , output[3]); //Left Front
@@ -557,7 +558,7 @@ std::vector<double> Robot::pwm2Motor(std::vector<double> power){
             }
         }
     }
-    std::cout<<std::endl;
+
     std::vector<double> desiredVel;
     for (int j = 0; j < 4; ++ j) {
         desiredVel.push_back(374.0/60.0*power[j]*12/100*(1/0.288)); //power is % of total power given. 374 rpm/V *total Voltage (power*12/100). So current units is in rotation/second
@@ -603,3 +604,71 @@ void Robot::vectorRotate(double yaw, double* x, double* y) {
     *x = cos(yaw)*tempx + sin(yaw)*tempy;
     *y = - sin(yaw)*tempx + cos(yaw)*tempy;
 }
+void Robot::setSpeed(dReal vx, dReal vy, dReal vw)
+{
+    robotToWorldReferenceFrame(vx, vy, vw);
+    // Calculate Motor Speeds
+    dReal _DEG2RAD = M_PI / 180.0;
+    dReal motorAlpha[4] = {cfg->robotSettings.Wheel1Angle * _DEG2RAD, cfg->robotSettings.Wheel2Angle * _DEG2RAD, cfg->robotSettings.Wheel3Angle * _DEG2RAD, cfg->robotSettings.Wheel4Angle * _DEG2RAD};
+
+    dReal dw1 =  (1.0 / cfg->robotSettings.WheelRadius) * (( (cfg->robotSettings.RobotRadius * vw) - (vx * sin(motorAlpha[0])) + (vy * cos(motorAlpha[0]))) );
+    dReal dw2 =  (1.0 / cfg->robotSettings.WheelRadius) * (( (cfg->robotSettings.RobotRadius * vw) - (vx * sin(motorAlpha[1])) + (vy * cos(motorAlpha[1]))) );
+    dReal dw3 =  (1.0 / cfg->robotSettings.WheelRadius) * (( (cfg->robotSettings.RobotRadius * vw) - (vx * sin(motorAlpha[2])) + (vy * cos(motorAlpha[2]))) );
+    dReal dw4 =  (1.0 / cfg->robotSettings.WheelRadius) * (( (cfg->robotSettings.RobotRadius * vw) - (vx * sin(motorAlpha[3])) + (vy * cos(motorAlpha[3]))) );
+
+
+    std::cout<<"Wheel: " <<0 <<" -" <<dw1<< " ";
+    std::cout<<"Wheel: " <<1 <<" -" <<dw2<< " ";
+    std::cout<<"Wheel: " <<2 <<" -" <<dw3<< " ";
+    std::cout<<"Wheel: " <<3 <<" -" <<dw4<< " ";
+    std::cout<<std::endl;
+    setSpeed(0 , dw1);
+    setSpeed(1 , dw2);
+    setSpeed(2 , dw3);
+    setSpeed(3 , dw4);
+}
+void Robot::robotToWorldReferenceFrame(dReal &vx, dReal &vy, dReal &vw)
+{
+    dReal _DEG2RAD = M_PI / 180.0;
+    xSensW = getDir() * _DEG2RAD;
+    dReal vxNew = vx*cos(xSensW) - vy*sin(xSensW);
+    dReal vyNew = vx*sin(xSensW) + vy*cos(xSensW);
+    vx = vxNew;
+    vy = vyNew;
+    dReal Pvw = constrainAngle(vw - xSensW);
+    dReal Dvw = constrainAngle(xSensW - xSensWPrev);
+    dReal P = 3.0 * Pvw;
+    dReal D = 0.5 * Dvw;
+    vw = P + D;
+    xSensWPrev = xSensW;
+}
+
+//double Controller::controlPIR(double err, double rate) {
+//    double value_P = this->controlP(err);
+//    double value_I = this->controlI(err);
+//    double value_R = this->controlR(rate);
+//    return value_P + value_I + value_R;
+//}
+//
+//double Controller::controlP(double err) {
+//    double value_P = this->kP * err;
+//    return value_P;
+//}
+//
+//double Controller::controlI(double err) {
+//    this->initial_I += err * this->timeDiff;
+//    double value_I = this->kI * this->initial_I;
+//    return value_I;
+//}
+//
+//double Controller::controlD(double err) {
+//    double rateErr = (err - this->prev_error) / this->timeDiff;
+//    double value_D = this->kD * rateErr;
+//    this->prev_error = err;
+//    return value_D;
+//}
+//
+//double Controller::controlR(double rate) {
+//    double value_R = this->kD * rate * -1;
+//    return value_R;
+//}
