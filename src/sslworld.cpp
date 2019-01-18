@@ -387,21 +387,24 @@ void SSLWorld::step(dReal dt)
         ballspeed = sqrt(ballspeed);
         dReal ballfx=0,ballfy=0,ballfz=0;
         dReal balltx=0,ballty=0,balltz=0;
-        if (ballspeed<0.01)
-        {
-            ;//const dReal* ballAngVel = dBodyGetAngularVel(ball->body);
-            //TODO: what was supposed to be here?
+        dReal fk = cfg->BallFriction()*cfg->BallMass()*cfg->Gravity();
+        if (ballspeed!=0){
+        ballfx = - fk*ballvel[0]/ballspeed;
+        ballfy = - fk*ballvel[1]/ballspeed;
+        ballfz = - fk*ballvel[2]/ballspeed;
+        balltx = - ballfy*cfg->BallRadius();
+        ballty = ballfx*cfg->BallRadius();
         }
         else {
-            dReal fk = cfg->BallFriction()*cfg->BallMass()*cfg->Gravity();
-            ballfx = -fk*ballvel[0] / ballspeed;
-            ballfy = -fk*ballvel[1] / ballspeed;
-            ballfz = -fk*ballvel[2] / ballspeed;
-            balltx = -ballfy*cfg->BallRadius();
-            ballty = ballfx*cfg->BallRadius();
-            balltz = 0;
-            dBodyAddTorque(ball->body,balltx,ballty,balltz);
+            balltx=0;
+            ballty=0;
+            balltz=0;
+            ballfx=0;
+            ballfy=0;
+            ballfz=0;
         }
+        balltz = 0;
+        dBodyAddTorque(ball->body, balltx, ballty, balltz);
         dBodyAddForce(ball->body,ballfx,ballfy,ballfz);
         if (dt==0) dt=last_dt;
         else last_dt = dt;
