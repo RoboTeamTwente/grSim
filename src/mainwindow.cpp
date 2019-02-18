@@ -138,6 +138,7 @@ MainWindow::MainWindow(QWidget *parent)
     showsimulator = new QAction("&Simulator", viewMenu);
     showsimulator->setCheckable(true);
     showsimulator->setChecked(true);
+    showsimulator->setShortcut(QKeySequence("Space"));
     viewMenu->addAction(showsimulator);
     showconfig = new QAction("&Configuration", viewMenu);
     showconfig->setCheckable(true);
@@ -294,10 +295,16 @@ void MainWindow::showHideConfig(bool v)
     else {dockconfig->hide();showconfig->setChecked(false);}
 }
 
-void MainWindow::showHideSimulator(bool v)
-{
-    if (v) {glwidget->show();showsimulator->setChecked(true);}
-    else {glwidget->hide();showsimulator->setChecked(false);}
+void MainWindow::showHideSimulator(bool v) {
+    if (v) {
+        glwidget->show();
+        showsimulator->setChecked(true);
+        this->setIsGlEnabled(true);
+    } else {
+        this->setIsGlEnabled(false);
+        glwidget->hide();
+        showsimulator->setChecked(false);
+    }
 }
 
 void MainWindow::changeCurrentRobot(){
