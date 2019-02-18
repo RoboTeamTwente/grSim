@@ -126,7 +126,7 @@ GLWidget::GLWidget(QWidget *parent, ConfigWidget* _cfg)
 
     // Starting the timer to make sure that the time is defined
     // the first time `step()` is called.
-    physicstimer.start();
+    rendertimer.start();
 }
 
 GLWidget::~GLWidget()
@@ -374,20 +374,22 @@ void GLWidget::step()
         time.restart();
         frames = 0;
     }
-
-    if (cfg->RealtimePhysics())
-    {
-        if (ddt>0.05) ddt=0.05;
-        ssl->step(ddt);
-        physicsddtcounter += ddt;
-    }
+    if (first_time) {ssl->step(); first_time = false;}
     else {
-        ssl->step(cfg->DeltaTime());
-        physicsddtcounter += cfg->DeltaTime();
+        if (cfg->SyncWithGL()) {
+            dReal ddt = rendertimer.elapsed()/1000.0;
+            if (ddt>0.05) ddt = 0.05;
+            ssl->step(ddt);
+            physicsddtcounter += ddt;
+        }
+        else {
+            ssl->step(cfg->DeltaTime());
+            physicsddtcounter += cfg->DeltaTime();
+        }
     }
 
     // Used to record the time spent each second on physics.
-    physicstimetaken += physicstimer.elapsed();
+    physicstimetaken += rendertimer.elapsed();
 
     physicsframecounter++;
     frames++;

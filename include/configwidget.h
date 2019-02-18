@@ -168,7 +168,7 @@ public:
   DEF_VALUE(double,Double,BallLinearDamp)
   DEF_VALUE(double,Double,BallAngularDamp)
 
-  DEF_VALUE(bool,Bool,RealtimePhysics)
+  DEF_VALUE(bool,Bool,SyncWithGL)
   DEF_VALUE(double,Double,DesiredFPS)
   DEF_VALUE(double,Double,DeltaTime)
   DEF_VALUE(int,Int,sendGeometryEvery)

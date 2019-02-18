@@ -1007,7 +1007,7 @@ int RobotsFomation::getScaledLength(double percentage)
 
 void RobotsFomation::resize(double xScale, double yScale)
 {
-    for (int k=0;k<ROBOT_COUNT;k++)
+    for (int k=0;k<cfg->Robots_Count();k++)
     {
         x[k] = x[k] * xScale;
         y[k] = y[k] * yScale;

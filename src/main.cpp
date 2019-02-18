@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
     if (std::find(argv, argend, std::string("--headless")) != argend
         || std::find(argv, argend, std::string("-H")) != argend) {
         // enable headless mode
-        w.hide();
+        // w.hide();
         w.setIsGlEnabled(false);
     } else {
         // Run normally
