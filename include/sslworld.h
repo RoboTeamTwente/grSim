@@ -74,6 +74,8 @@ public:
     void addFieldArc(SSL_GeometryFieldSize *field, const string &name, float c_x, float c_y, float radius, float a1, float a2, float thickness);
     void sendVisionBuffer();
     bool visibleInCam(int id, double x, double y);
+    int  robotIndex(int robot,int team);
+
     ConfigWidget* cfg;
     CGraphics* g;
     PWorld* p;
@@ -105,7 +107,7 @@ class RobotsFomation {
     public:
         dReal x[MAX_ROBOT_COUNT];
         dReal y[MAX_ROBOT_COUNT];
-        RobotsFomation(int type, double field_width, double field_length);
+        RobotsFomation(int type, ConfigWidget* _cfg);
         void setAll(dReal *xx,dReal *yy);
         void loadFromFile(const QString& filename);
         bool loadFromIniFile(const QString& filename);
@@ -113,6 +115,9 @@ class RobotsFomation {
         void resize(double xScale, double yScale);
         int getScaledWidth(double percentage);
         int getScaledLength(double percentage);
+    private:
+        ConfigWidget* cfg;
+
 };
 
 dReal fric(dReal f);
