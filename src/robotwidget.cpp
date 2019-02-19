@@ -25,7 +25,7 @@ Copyright (C) 2011, Parsian Robotic Center (eew.aut.ac.ir/~parsian/grsim)
 #include <QSizePolicy>
 #include <QString>
 
-RobotWidget::RobotWidget(QWidget* parent)
+RobotWidget::RobotWidget(QWidget* parent, ConfigWidget* cfg)
     : QDockWidget("Current Robot",parent)
 {
     QGridLayout *layout = new QGridLayout;
@@ -36,10 +36,12 @@ RobotWidget::RobotWidget(QWidget* parent)
     robotCombo = new QComboBox(this);
 
     // Add items to the combo box dynamically 
-    for (int i=0; i<ROBOT_COUNT; i++){
+    for (int i=0; i<cfg->Robots_Count(); i++){
       QString item=QString::number(i);
       robotCombo->addItem(item);
     }
+
+
     vellabel = new QLabel;
     acclabel = new QLabel;
     resetBtn = new QPushButton("Reset");

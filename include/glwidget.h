@@ -100,10 +100,11 @@ protected:
     void keyReleaseEvent(QKeyEvent* event);
     void closeEvent(QCloseEvent *event);
 private:
+    bool first_time = false;
     int state;
     int moving_robot_id,clicked_robot;
     int frames, physicsframecounter;
-    QTime time,physicstimer;
+    QTime time,rendertimer;
     QTimer physicsfpsupdatetimer;
     dReal m_fps;
     // How many simulated seconds go in a real second.
