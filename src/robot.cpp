@@ -468,32 +468,34 @@ void Robot::incSpeed(int i,dReal v)
 
 //Implements our angle control cycle
 void Robot::setAngle(dReal vx, dReal vy, dReal vw) {
-    double xSensW=constrainAngle((double) getDir()/180.0*M_PI);
-    // Rotate to local frame of reference
-    vectorRotate(xSensW,&vx,&vy);
-    double assumed_delay=cfg->sendDelay()/1000; // seconds
-    double yawVel=constrainAngle(xSensW-prevYaw)*60; //TODO: Fix time difference?
-    prevYaw=xSensW;
-    double comp_dir=yawVel*assumed_delay;
-    vectorRotate(comp_dir,&vx,&vy);
 
-    dReal Fx=vx*1500, Fy=vy*2000; //MAGIC NUMBERS
-    dReal Fw=angleControl(vw,xSensW)*2.0; //MORE MAGIC NUMBERS
-    dReal scale=scaleLimit(Fx,Fy,Fw,100); //EVEN MORE MAGIC NUMBERS
-    Fx=scale*Fx;
-    Fy=scale*Fy;
-    Fw=Fw*0.5;
-    std::vector<double> pwm=body2Wheels(Fx,Fy,Fw);
-    std::vector<double> output=pwm2Motor(pwm);
-    std::cout<<"Direction:" << xSensW <<std::endl;
-    for (int i = 0; i < 4; ++ i) {
-        std::cout<<"Wheel: " <<i <<" : " <<output[i]<< " ";
-    }
-    std::cout<<std::endl;
-    setSpeed(0 , output[3]); //Left Front
-    setSpeed(1 , output[2]); //Left back
-    setSpeed(2 , output[1]); //Right Back
-    setSpeed(3 , output[0]); // Right Front
+    double robotAngle = constrainAngle(getDir() * M_PI / 180.0);
+    double deltaAngle = constrainAngle(vw - robotAngle);
+    if (deltaAngle < - M_PI)
+        deltaAngle += 2*M_PI;
+    else if (deltaAngle > M_PI )
+        deltaAngle -= 2*M_PI;
+
+    double angularVel = robotAngle - prevYaw;
+    prevYaw = robotAngle;
+
+    double kP = 5.0;
+    double kD = 1.5;
+    double tps = 60;
+    double pidP = kP * deltaAngle;
+    double pidD = - kD * angularVel*tps;
+
+    double velocityAngle = atan2(vy, vx);
+    velocityAngle -= robotAngle;
+    if (velocityAngle < - M_PI)
+        velocityAngle += 2*M_PI;
+    else if (velocityAngle > M_PI )
+        velocityAngle -= 2*M_PI;
+    double vLength = sqrt(vx*vx + vy*vy);
+    double newvy = sin(velocityAngle)*vLength;
+    double newvx = cos(velocityAngle)*vLength;
+
+    setSpeed(newvx, newvy, pidP + pidD);
 }
 
 std::vector<double> Robot::body2Wheels(dReal Fx,dReal Fy,dReal Fw){

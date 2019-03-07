@@ -504,7 +504,7 @@ void SSLWorld::recvActions()
                     bool wheels = false;
                     if (packet.commands().robot_commands(i).has_wheelsspeed())
                     {
-                        if (packet.commands().robot_commands(i).wheelsspeed()==true)
+                        if (packet.commands().robot_commands(i).wheelsspeed())
                         {
                             if (packet.commands().robot_commands(i).has_wheel1()) robots[id]->setSpeed(0, packet.commands().robot_commands(i).wheel1());
                             if (packet.commands().robot_commands(i).has_wheel2()) robots[id]->setSpeed(1, packet.commands().robot_commands(i).wheel2());
@@ -616,24 +616,25 @@ dReal normalizeAngle(dReal a)
 
 bool SSLWorld::visibleInCam(int id, double x, double y)
 {
-    id %= 4;
-    if (id==0)
-    {
-        if (x>-0.2 && y>-0.2) return true;
-    }
-    if (id==1)
-    {
-        if (x>-0.2 && y<0.2) return true;
-    }
-    if (id==2)
-    {
-        if (x<0.2 && y<0.2) return true;
-    }
-    if (id==3)
-    {
-        if (x<0.2 && y>-0.2) return true;
-    }
-    return false;
+    return id==0;
+    //    id %= 4;
+//    if (id==0)
+//    {
+//        if (x>-0.2 && y>-0.2) return true;
+//    }
+//    if (id==1)
+//    {
+//        if (x>-0.2 && y<0.2) return true;
+//    }
+//    if (id==2)
+//    {
+//        if (x<0.2 && y<0.2) return true;
+//    }
+//    if (id==3)
+//    {
+//        if (x<0.2 && y>-0.2) return true;
+//    }
+//    return false;
 }
 
 #define CONVUNIT(x) ((int)(1000*(x)))
@@ -815,9 +816,9 @@ void SSLWorld::sendVisionBuffer()
 {
     int t = timer->elapsed();
     sendQueue.push_back(new SendingPacket(generatePacket(0),t));
-    sendQueue.push_back(new SendingPacket(generatePacket(1),t+1));
-    sendQueue.push_back(new SendingPacket(generatePacket(2),t+2));
-    sendQueue.push_back(new SendingPacket(generatePacket(3),t+3));
+//    sendQueue.push_back(new SendingPacket(generatePacket(1),t+1));
+//    sendQueue.push_back(new SendingPacket(generatePacket(2),t+2));
+//    sendQueue.push_back(new SendingPacket(generatePacket(3),t+3));
     while (t - sendQueue.front()->t>=cfg->sendDelay())
     {
         SSL_WrapperPacket *packet = sendQueue.front()->packet;
