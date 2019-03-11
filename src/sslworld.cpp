@@ -616,25 +616,24 @@ dReal normalizeAngle(dReal a)
 
 bool SSLWorld::visibleInCam(int id, double x, double y)
 {
-    return id==0;
-    //    id %= 4;
-//    if (id==0)
-//    {
-//        if (x>-0.2 && y>-0.2) return true;
-//    }
-//    if (id==1)
-//    {
-//        if (x>-0.2 && y<0.2) return true;
-//    }
-//    if (id==2)
-//    {
-//        if (x<0.2 && y<0.2) return true;
-//    }
-//    if (id==3)
-//    {
-//        if (x<0.2 && y>-0.2) return true;
-//    }
-//    return false;
+    id %= 4;
+    if (id==0)
+    {
+        if (x>-0.2 && y>-0.2) return true;
+    }
+    if (id==1)
+    {
+        if (x>-0.2 && y<0.2) return true;
+    }
+    if (id==2)
+    {
+        if (x<0.2 && y<0.2) return true;
+    }
+    if (id==3)
+    {
+        if (x<0.2 && y>-0.2) return true;
+    }
+    return false;
 }
 
 #define CONVUNIT(x) ((int)(1000*(x)))
@@ -681,8 +680,9 @@ SSL_WrapperPacket* SSLWorld::generatePacket(int cam_id)
         addFieldLinesArcs(field);
 
     }
-    if (cfg->noise()==false) {dev_x = 0;dev_y = 0;dev_a = 0;}
-    if ((cfg->vanishing()==false) || (rand0_1() > cfg->ball_vanishing()))
+    // vanishing robots
+    if (! cfg->noise()) { dev_x = 0;dev_y = 0;dev_a = 0;}
+    if (! cfg->vanishing() || (rand0_1() > cfg->ball_vanishing()))
     {
         if (visibleInCam(cam_id, x, y)) {
             SSL_DetectionBall* vball = packet->mutable_detection()->add_balls();
@@ -695,7 +695,7 @@ SSL_WrapperPacket* SSLWorld::generatePacket(int cam_id)
         }
     }
     for(int i = 0; i < ROBOT_COUNT; i++){
-        if ((cfg->vanishing()==false) || (rand0_1() > cfg->blue_team_vanishing()))
+        if (! cfg->vanishing() || (rand0_1() > cfg->blue_team_vanishing()))
         {
             if (!robots[i]->on) continue;
             robots[i]->getXY(x,y);
@@ -713,7 +713,7 @@ SSL_WrapperPacket* SSLWorld::generatePacket(int cam_id)
         }
     }
     for(int i = ROBOT_COUNT; i < ROBOT_COUNT*2; i++){
-        if ((cfg->vanishing()==false) || (rand0_1() > cfg->yellow_team_vanishing()))
+        if (! cfg->vanishing() || (rand0_1() > cfg->yellow_team_vanishing()))
         {
             if (!robots[i]->on) continue;
             robots[i]->getXY(x,y);
@@ -816,9 +816,13 @@ void SSLWorld::sendVisionBuffer()
 {
     int t = timer->elapsed();
     sendQueue.push_back(new SendingPacket(generatePacket(0),t));
-//    sendQueue.push_back(new SendingPacket(generatePacket(1),t+1));
-//    sendQueue.push_back(new SendingPacket(generatePacket(2),t+2));
-//    sendQueue.push_back(new SendingPacket(generatePacket(3),t+3));
+    sendQueue.push_back(new SendingPacket(generatePacket(1),t+1));
+    sendQueue.push_back(new SendingPacket(generatePacket(2),t+2));
+    sendQueue.push_back(new SendingPacket(generatePacket(3),t+3));
+    //TODO: worldstate does not work without the 5th camera?? some error where at id==3 (visible in cam: x < 0, y > 0)
+    //TODO: packets are not being send somehow -- only happens with the last entity in the sendQueue array.
+    sendQueue.push_back(new SendingPacket(generatePacket(4),t+4));
+
     while (t - sendQueue.front()->t>=cfg->sendDelay())
     {
         SSL_WrapperPacket *packet = sendQueue.front()->packet;
