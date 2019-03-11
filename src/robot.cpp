@@ -443,11 +443,11 @@ void Robot::setSpeed(dReal vx, dReal vy, dReal vw)
     dReal dw4 =  (1.0 / cfg->robotSettings.WheelRadius) * (( (cfg->robotSettings.RobotRadius * vw) - (vx * sin(motorAlpha[3])) + (vy * cos(motorAlpha[3]))) );
 
 
-    std::cout<<"Wheel: " <<0 <<" -" <<dw1<< " ";
-    std::cout<<"Wheel: " <<1 <<" -" <<dw2<< " ";
-    std::cout<<"Wheel: " <<2 <<" -" <<dw3<< " ";
-    std::cout<<"Wheel: " <<3 <<" -" <<dw4<< " ";
-    std::cout<<std::endl;
+//    std::cout<<"Wheel: " <<0 <<" -" <<dw1<< " ";
+//    std::cout<<"Wheel: " <<1 <<" -" <<dw2<< " ";
+//    std::cout<<"Wheel: " <<2 <<" -" <<dw3<< " ";
+//    std::cout<<"Wheel: " <<3 <<" -" <<dw4<< " ";
+//    std::cout<<std::endl;
     setSpeed(0 , dw1);
     setSpeed(1 , dw2);
     setSpeed(2 , dw3);

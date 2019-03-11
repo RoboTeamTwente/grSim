@@ -616,24 +616,26 @@ dReal normalizeAngle(dReal a)
 
 bool SSLWorld::visibleInCam(int id, double x, double y)
 {
-    id %= 4;
-    if (id==0)
-    {
-        if (x>-0.2 && y>-0.2) return true;
+
+    switch (getAmountOfCameras()) {
+    case EIGHT:
+        return  (id==0 && x<-2.5          && y>-0.5) || (id==1 && x<0.5 && x>-3.5 && y>-0.5) ||
+                (id==2 && x>-0.5 && x<3.5 && y>-0.5) || (id==3 && x>2.5           && y>-0.5) ||
+                (id==4 && x<-2.5          && y<0.5 ) || (id==5 && x<0.5 && x>-3.5 && y<0.5 ) ||
+                (id==6 && x<-0.5 && x<3.5 && y<0.5 ) || (id==7 && x>2.5           && y<0.5 );
+
+    case FOUR:
+        return  (id==0 && x<0.5           && y>-0.5) || (id==1 && x>-0.5          && y>-0.5) ||
+                (id==2 && x<0.5           && y<0.5 ) || (id==3 && x>-0.5          && y<0.5 );
+
+    case TWO:
+        return  (id==0 && x<0.5                    ) || (id==1 && x>-0.5                   );
+
+    case ONE:
+    default:
+        return  (id==0                             );
+
     }
-    if (id==1)
-    {
-        if (x>-0.2 && y<0.2) return true;
-    }
-    if (id==2)
-    {
-        if (x<0.2 && y<0.2) return true;
-    }
-    if (id==3)
-    {
-        if (x<0.2 && y>-0.2) return true;
-    }
-    return false;
 }
 
 #define CONVUNIT(x) ((int)(1000*(x)))
@@ -812,16 +814,22 @@ SendingPacket::SendingPacket(SSL_WrapperPacket* _packet,int _t)
     t      = _t;
 }
 
+SSLWorld::AmountOfCameras SSLWorld::getAmountOfCameras() {
+
+    int totalCamsInInterface = cfg->nCameras();
+    return totalCamsInInterface>=8 ? EIGHT :
+           totalCamsInInterface>=4 ? FOUR :
+           totalCamsInInterface>=2 ? TWO :
+                                     ONE;
+}
+
 void SSLWorld::sendVisionBuffer()
 {
     int t = timer->elapsed();
-    sendQueue.push_back(new SendingPacket(generatePacket(0),t));
-    sendQueue.push_back(new SendingPacket(generatePacket(1),t+1));
-    sendQueue.push_back(new SendingPacket(generatePacket(2),t+2));
-    sendQueue.push_back(new SendingPacket(generatePacket(3),t+3));
-    //TODO: worldstate does not work without the 5th camera?? some error where at id==3 (visible in cam: x < 0, y > 0)
-    //TODO: packets are not being send somehow -- only happens with the last entity in the sendQueue array.
-    sendQueue.push_back(new SendingPacket(generatePacket(4),t+4));
+    int amountOfCameras = 9;
+    for (int i = 0; i < amountOfCameras; i++) {
+        sendQueue.push_back(new SendingPacket(generatePacket(i),t+i));
+    }
 
     while (t - sendQueue.front()->t>=cfg->sendDelay())
     {

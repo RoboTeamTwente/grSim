@@ -99,6 +99,7 @@ ConfigWidget::ConfigWidget()
     ADD_VALUE(comm_vars,Int,BlueStatusSendPort,30011,"Blue Team status send port")
     ADD_VALUE(comm_vars,Int,YellowStatusSendPort,30012,"Yellow Team status send port")
     ADD_VALUE(comm_vars,Int,sendDelay,0,"Sending delay (milliseconds)")
+    ADD_VALUE(comm_vars,Int,nCameras,1,"amount of cameras (1, 2, 4 or 8)")
     ADD_VALUE(comm_vars,Int,sendGeometryEvery,120,"Send geometry every X frames")
     VarListPtr gauss_vars(new VarList("Gaussian noise"));
         comm_vars->addChild(gauss_vars);
