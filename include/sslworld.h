@@ -36,11 +36,10 @@ Copyright (C) 2011, Parsian Robotic Center (eew.aut.ac.ir/~parsian/grsim)
 #include "robot.h"
 #include "configwidget.h"
 
-#include "config.h"
-
 #define WALL_COUNT 10
+#define MAX_ROBOT_COUNT 16
 
-class RobotsFomation;
+class RobotsFormation;
 class SendingPacket {
     public:
         SendingPacket(SSL_WrapperPacket* _packet, int _t);
@@ -69,7 +68,7 @@ class SSLWorld : public QObject {
     public:
         dReal customDT;
         bool isGLEnabled;
-        SSLWorld(QGLWidget* parent, ConfigWidget* _cfg, RobotsFomation* form1, RobotsFomation* form2);
+        SSLWorld(QGLWidget* parent, ConfigWidget* _cfg, RobotsFormation* form1, RobotsFormation* form2);
         virtual ~SSLWorld();
         void glinit();
         void step(dReal dt = - 1);
@@ -108,14 +107,16 @@ class SSLWorld : public QObject {
         void fpsChanged(int newFPS);
 };
 
-class RobotsFomation {
+class RobotsFormation {
     private:
         int field_width;
         int field_length;
+
+        ConfigWidget* cfg;
     public:
         dReal x[MAX_ROBOT_COUNT];
         dReal y[MAX_ROBOT_COUNT];
-        RobotsFomation(int type, double field_width, double field_length);
+        RobotsFormation(int type, ConfigWidget* _cfg);
         void setAll(dReal* xx, dReal* yy);
         void loadFromFile(const QString &filename);
         bool loadFromIniFile(const QString &filename);

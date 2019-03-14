@@ -56,7 +56,7 @@ ConfigWidget::ConfigWidget()
   ADD_TO_ENUM(Division, "Division A");
   ADD_TO_ENUM(Division, "Division B");
   END_ENUM(game_vars, Division);
-  ADD_VALUE(game_vars,Int, Robots_Count, 8, "Robots Count")
+  ADD_VALUE(game_vars, Int, Robots_Count, 8, "Robots Count")
   VarListPtr fields_vars(new VarList("Field"));
   VarListPtr div_a_vars(new VarList("Division A"));
   VarListPtr div_b_vars(new VarList("Division B"));

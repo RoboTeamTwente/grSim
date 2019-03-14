@@ -40,7 +40,7 @@ public:
     dReal getPhysicsAverageStepTime();
     ConfigWidget* cfg;
     SSLWorld* ssl;
-    RobotsFomation* forms[6];
+    RobotsFormation* forms[6];
     QMenu* robpopup,*ballpopup,*mainpopup;
     QMenu *blueRobotsMenu,*yellowRobotsMenu;
     QAction* moveRobotAct;

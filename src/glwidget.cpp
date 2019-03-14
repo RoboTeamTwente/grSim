@@ -15,7 +15,6 @@ Copyright (C) 2011, Parsian Robotic Center (eew.aut.ac.ir/~parsian/grsim)
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "config.h"
 #include <QtGui>
 
 #include <QPainter>
@@ -37,11 +36,11 @@ GLWidget::GLWidget(QWidget *parent, ConfigWidget* _cfg)
     state = 0;
     cfg = _cfg;
 
-    forms[1] = new RobotsFomation(-1, cfg);  //outside yellow
-    forms[2] = new RobotsFomation(1, cfg);  //inside type 1
-    forms[3] = new RobotsFomation(2, cfg);  //inside type 2
-    forms[4] = new RobotsFomation(3, cfg);  //inside type 1
-    //forms[5] = new RobotsFomation(4);  //inside type 2
+    forms[1] = new RobotsFormation(-1, cfg);  //outside yellow
+    forms[2] = new RobotsFormation(1, cfg);  //inside type 1
+    forms[3] = new RobotsFormation(2, cfg);  //inside type 2
+    forms[4] = new RobotsFormation(3, cfg);  //inside type 1
+    //forms[5] = new RobotsFormation(4);  //inside type 2
 
     ssl = new SSLWorld(this,cfg,forms[2],forms[2]);
     Current_robot = 0;

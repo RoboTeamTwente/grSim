@@ -130,7 +130,7 @@ bool ballCallBack(dGeomID o1,dGeomID o2,PSurface* s, int /*robots_count*/)
     return true;
 }
 
-SSLWorld::SSLWorld(QGLWidget* parent,ConfigWidget* _cfg,RobotsFomation *form1,RobotsFomation *form2)
+SSLWorld::SSLWorld(QGLWidget* parent,ConfigWidget* _cfg,RobotsFormation *form1,RobotsFormation *form2)
     : QObject(parent)
 {
     isGLEnabled = true;
@@ -843,8 +843,10 @@ SSLWorld::AmountOfCameras SSLWorld::getAmountOfCameras() {
 void SSLWorld::sendVisionBuffer()
 {
     int t = timer->elapsed();
-    int amountOfCameras = 9;
+    int amountOfCameras = 10;
     for (int i = 0; i < amountOfCameras; i++) {
+        std::cout << amountOfCameras+i << std::endl;
+
         sendQueue.push_back(new SendingPacket(generatePacket(i),t+i));
     }
 
@@ -859,7 +861,7 @@ void SSLWorld::sendVisionBuffer()
     }
 }
 
-void RobotsFomation::setAll(dReal* xx,dReal *yy)
+void RobotsFormation::setAll(dReal* xx,dReal *yy)
 {
     for (int i=0;i<cfg->Robots_Count();i++)
     {
@@ -868,7 +870,7 @@ void RobotsFomation::setAll(dReal* xx,dReal *yy)
     }
 }
 
-RobotsFomation::RobotsFomation(int type, ConfigWidget* _cfg):
+RobotsFormation::RobotsFormation(int type, ConfigWidget* _cfg):
 cfg(_cfg) {
     this->field_length = field_length;
     this->field_width = field_width;
@@ -926,7 +928,7 @@ cfg(_cfg) {
 
 }
 
-void RobotsFomation::loadFromFile(const QString& filename)
+void RobotsFormation::loadFromFile(const QString& filename)
 {
     QFile file(filename);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
@@ -968,7 +970,7 @@ PosX = "1.5"
 PosY = "-1.12"
 
  */
-bool RobotsFomation::loadFromIniFile(const QString& filename)
+bool RobotsFormation::loadFromIniFile(const QString& filename)
 {
     QSettings* settings = new QSettings(filename, QSettings::IniFormat);
 
@@ -996,7 +998,7 @@ bool RobotsFomation::loadFromIniFile(const QString& filename)
     return true;
 }
 
-void RobotsFomation::resetRobots(Robot** r,int team)
+void RobotsFormation::resetRobots(Robot** r,int team)
 {
     dReal dir=-1;
     if (team==1) dir = 1;
@@ -1007,18 +1009,18 @@ void RobotsFomation::resetRobots(Robot** r,int team)
     }
 }
 
-int RobotsFomation::getScaledWidth(double percentage)
+int RobotsFormation::getScaledWidth(double percentage)
 {
     return percentage * field_width / 200.0;
 }
 
-int RobotsFomation::getScaledLength(double percentage)
+int RobotsFormation::getScaledLength(double percentage)
 {
     return percentage * field_length / 200.0;
 }
 
 
-void RobotsFomation::resize(double xScale, double yScale)
+void RobotsFormation::resize(double xScale, double yScale)
 {
     for (int k=0;k<cfg->Robots_Count();k++)
     {

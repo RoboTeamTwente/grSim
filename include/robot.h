@@ -90,7 +90,7 @@ public:
         PBox* box;
         Robot* rob;
     } *kicker;
-
+    Robot() = default;
     Robot(PWorld* world,PBall* ball,ConfigWidget* _cfg,dReal x,dReal y,dReal z,dReal r,dReal g,dReal b,int rob_id,int wheeltexid,int dir);
     ~Robot();
     void step();
