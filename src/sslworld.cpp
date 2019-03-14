@@ -130,7 +130,7 @@ bool ballCallBack(dGeomID o1,dGeomID o2,PSurface* s, int /*robots_count*/)
     return true;
 }
 
-SSLWorld::SSLWorld(QGLWidget* parent,ConfigWidget* _cfg,RobotsFomation *form1,RobotsFomation *form2)
+SSLWorld::SSLWorld(QGLWidget* parent,ConfigWidget* _cfg,RobotsFormation *form1,RobotsFormation *form2)
     : QObject(parent)
 {
     isGLEnabled = true;
@@ -292,7 +292,7 @@ SSLWorld::SSLWorld(QGLWidget* parent,ConfigWidget* _cfg,RobotsFomation *form1,Ro
             w_g->callback=wheelCallBack;
         }
 
-        for (int j = k + 1; j < 2 * cfg->Robots_Count(); j++) {            
+        for (int j = k + 1; j < 2 * cfg->Robots_Count(); j++) {
             if (k != j)
             {
                 p->createSurface(robots[k]->dummy,robots[j]->dummy); //seams ode doesn't understand cylinder-cylinder contacts, so I used spheres
@@ -522,7 +522,7 @@ void SSLWorld::recvActions()
                     bool wheels = false;
                     if (packet.commands().robot_commands(i).has_wheelsspeed())
                     {
-                        if (packet.commands().robot_commands(i).wheelsspeed()==true)
+                        if (packet.commands().robot_commands(i).wheelsspeed())
                         {
                             if (packet.commands().robot_commands(i).has_wheel1()) robots[id]->setSpeed(0, packet.commands().robot_commands(i).wheel1());
                             if (packet.commands().robot_commands(i).has_wheel2()) robots[id]->setSpeed(1, packet.commands().robot_commands(i).wheel2());
@@ -634,24 +634,26 @@ dReal normalizeAngle(dReal a)
 
 bool SSLWorld::visibleInCam(int id, double x, double y)
 {
-    id %= 4;
-    if (id==0)
-    {
-        if (x>-0.2 && y>-0.2) return true;
+
+    switch (getAmountOfCameras()) {
+    case EIGHT:
+        return  (id==0 && x<-2.5          && y>-0.5) || (id==1 && x<0.5 && x>-3.5 && y>-0.5) ||
+                (id==2 && x>-0.5 && x<3.5 && y>-0.5) || (id==3 && x>2.5           && y>-0.5) ||
+                (id==4 && x<-2.5          && y<0.5 ) || (id==5 && x<0.5 && x>-3.5 && y<0.5 ) ||
+                (id==6 && x>-0.5 && x<3.5 && y<0.5 ) || (id==7 && x>2.5           && y<0.5 );
+
+    case FOUR:
+        return  (id==0 && x<0.5           && y>-0.5) || (id==1 && x>-0.5          && y>-0.5) ||
+                (id==2 && x<0.5           && y<0.5 ) || (id==3 && x>-0.5          && y<0.5 );
+
+    case TWO:
+        return  (id==0 && x<0.5                    ) || (id==1 && x>-0.5                   );
+
+    case ONE:
+    default:
+        return  (id==0                             );
+
     }
-    if (id==1)
-    {
-        if (x>-0.2 && y<0.2) return true;
-    }
-    if (id==2)
-    {
-        if (x<0.2 && y<0.2) return true;
-    }
-    if (id==3)
-    {
-        if (x<0.2 && y>-0.2) return true;
-    }
-    return false;
 }
 
 #define CONVUNIT(x) ((int)(1000*(x)))
@@ -698,8 +700,9 @@ SSL_WrapperPacket* SSLWorld::generatePacket(int cam_id)
         addFieldLinesArcs(field);
 
     }
-    if (cfg->noise()==false) {dev_x = 0;dev_y = 0;dev_a = 0;}
-    if ((cfg->vanishing()==false) || (rand0_1() > cfg->ball_vanishing()))
+    // vanishing robots
+    if (! cfg->noise()) { dev_x = 0;dev_y = 0;dev_a = 0;}
+    if (! cfg->vanishing() || (rand0_1() > cfg->ball_vanishing()))
     {
         if (visibleInCam(cam_id, x, y)) {
             SSL_DetectionBall* vball = packet->mutable_detection()->add_balls();
@@ -712,7 +715,7 @@ SSL_WrapperPacket* SSLWorld::generatePacket(int cam_id)
         }
     }
     for(int i = 0; i < cfg->Robots_Count(); i++){
-        if ((cfg->vanishing()==false) || (rand0_1() > cfg->blue_team_vanishing()))
+        if (! cfg->vanishing() || (rand0_1() > cfg->blue_team_vanishing()))
         {
             if (!robots[i]->on) continue;
             robots[i]->getXY(x,y);
@@ -730,7 +733,7 @@ SSL_WrapperPacket* SSLWorld::generatePacket(int cam_id)
         }
     }
     for(int i = cfg->Robots_Count(); i < cfg->Robots_Count()*2; i++){
-        if ((cfg->vanishing()==false) || (rand0_1() > cfg->yellow_team_vanishing()))
+        if (! cfg->vanishing() || (rand0_1() > cfg->yellow_team_vanishing()))
         {
             if (!robots[i]->on) continue;
             robots[i]->getXY(x,y);
@@ -828,13 +831,25 @@ SendingPacket::SendingPacket(SSL_WrapperPacket* _packet,int _t)
     t      = _t;
 }
 
+SSLWorld::AmountOfCameras SSLWorld::getAmountOfCameras() {
+
+    int totalCamsInInterface = cfg->nCameras();
+    return totalCamsInInterface>=8 ? EIGHT :
+           totalCamsInInterface>=4 ? FOUR :
+           totalCamsInInterface>=2 ? TWO :
+                                     ONE;
+}
+
 void SSLWorld::sendVisionBuffer()
 {
     int t = timer->elapsed();
-    sendQueue.push_back(new SendingPacket(generatePacket(0),t));
-    sendQueue.push_back(new SendingPacket(generatePacket(1),t+1));
-    sendQueue.push_back(new SendingPacket(generatePacket(2),t+2));
-    sendQueue.push_back(new SendingPacket(generatePacket(3),t+3));
+    int amountOfCameras = 10;
+    for (int i = 0; i < amountOfCameras; i++) {
+        std::cout << amountOfCameras+i << std::endl;
+
+        sendQueue.push_back(new SendingPacket(generatePacket(i),t+i));
+    }
+
     while (t - sendQueue.front()->t>=cfg->sendDelay())
     {
         SSL_WrapperPacket *packet = sendQueue.front()->packet;
@@ -846,7 +861,7 @@ void SSLWorld::sendVisionBuffer()
     }
 }
 
-void RobotsFomation::setAll(dReal* xx,dReal *yy)
+void RobotsFormation::setAll(dReal* xx,dReal *yy)
 {
     for (int i=0;i<cfg->Robots_Count();i++)
     {
@@ -855,7 +870,7 @@ void RobotsFomation::setAll(dReal* xx,dReal *yy)
     }
 }
 
-RobotsFomation::RobotsFomation(int type, ConfigWidget* _cfg):
+RobotsFormation::RobotsFormation(int type, ConfigWidget* _cfg):
 cfg(_cfg) {
     this->field_length = field_length;
     this->field_width = field_width;
@@ -913,7 +928,7 @@ cfg(_cfg) {
 
 }
 
-void RobotsFomation::loadFromFile(const QString& filename)
+void RobotsFormation::loadFromFile(const QString& filename)
 {
     QFile file(filename);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
@@ -955,7 +970,7 @@ PosX = "1.5"
 PosY = "-1.12"
 
  */
-bool RobotsFomation::loadFromIniFile(const QString& filename)
+bool RobotsFormation::loadFromIniFile(const QString& filename)
 {
     QSettings* settings = new QSettings(filename, QSettings::IniFormat);
 
@@ -983,7 +998,7 @@ bool RobotsFomation::loadFromIniFile(const QString& filename)
     return true;
 }
 
-void RobotsFomation::resetRobots(Robot** r,int team)
+void RobotsFormation::resetRobots(Robot** r,int team)
 {
     dReal dir=-1;
     if (team==1) dir = 1;
@@ -994,18 +1009,18 @@ void RobotsFomation::resetRobots(Robot** r,int team)
     }
 }
 
-int RobotsFomation::getScaledWidth(double percentage)
+int RobotsFormation::getScaledWidth(double percentage)
 {
     return percentage * field_width / 200.0;
 }
 
-int RobotsFomation::getScaledLength(double percentage)
+int RobotsFormation::getScaledLength(double percentage)
 {
     return percentage * field_length / 200.0;
 }
 
 
-void RobotsFomation::resize(double xScale, double yScale)
+void RobotsFormation::resize(double xScale, double yScale)
 {
     for (int k=0;k<cfg->Robots_Count();k++)
     {

@@ -179,6 +179,7 @@ public:
   DEF_VALUE(int,Int,BlueStatusSendPort)
   DEF_VALUE(int,Int,YellowStatusSendPort)
   DEF_VALUE(int,Int,sendDelay)
+  DEF_VALUE(int,Int,nCameras)
   DEF_VALUE(bool,Bool,noise)
   DEF_VALUE(double,Double,noiseDeviation_x)
   DEF_VALUE(double,Double,noiseDeviation_y)

@@ -156,8 +156,7 @@ set(HEADERS
     include/robotwidget.h
     include/getpositionwidget.h
     include/common.h
-    include/config.h
-)
+        )
 
 # files to be compiled
 set(srcs
