@@ -365,7 +365,7 @@ void GLWidget::step()
 {
     const dReal* ballV = dBodyGetLinearVel(ssl->ball->body);
     double ballSpeed = ballV[0]*ballV[0] + ballV[1]*ballV[1] + ballV[2]*ballV[2];
-    ballSpeed  = sqrt(ballSpeed);
+    ballSpeed = sqrt(ballSpeed);
 
 
     // Restarts the time as well as gets it.

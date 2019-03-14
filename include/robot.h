@@ -62,7 +62,8 @@ public:
         PCylinder* cyl;
         dReal speed;
         Robot* rob;
-    } *wheels[4];
+    }
+    *wheels[4];
     class Kicker
     {
       private:

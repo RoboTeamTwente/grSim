@@ -469,6 +469,7 @@ void Robot::incSpeed(int i,dReal v)
 //Implements our angle control cycle
 void Robot::setAngle(dReal vx, dReal vy, dReal vw) {
 
+//Get difference angle towards targetAngle
     double robotAngle = constrainAngle(getDir() * M_PI / 180.0);
     double deltaAngle = constrainAngle(vw - robotAngle);
     if (deltaAngle < - M_PI)
@@ -476,15 +477,11 @@ void Robot::setAngle(dReal vx, dReal vy, dReal vw) {
     else if (deltaAngle > M_PI )
         deltaAngle -= 2*M_PI;
 
+//Get angular velocity
     double angularVel = robotAngle - prevYaw;
     prevYaw = robotAngle;
 
-    double kP = 5.0;
-    double kD = 1.5;
-    double tps = 60;
-    double pidP = kP * deltaAngle;
-    double pidD = - kD * angularVel*tps;
-
+//Transform vx, vy relative to robot to newvx, newvy which are relative to the world
     double velocityAngle = atan2(vy, vx);
     velocityAngle -= robotAngle;
     if (velocityAngle < - M_PI)
@@ -495,7 +492,15 @@ void Robot::setAngle(dReal vx, dReal vy, dReal vw) {
     double newvy = sin(velocityAngle)*vLength;
     double newvx = cos(velocityAngle)*vLength;
 
-    setSpeed(newvx, newvy, pidP + pidD);
+//PID control for the angle
+    double tps = cfg->DesiredFPS();
+    double kAngP = 7.0;
+    double kAngD = 1.0;
+
+    double pidAngP = kAngP * deltaAngle;
+    double pidAngD = - kAngD * angularVel * tps;
+
+    setSpeed(newvx, newvy, pidAngP + pidAngD);
 }
 
 std::vector<double> Robot::body2Wheels(dReal Fx,dReal Fy,dReal Fw){
