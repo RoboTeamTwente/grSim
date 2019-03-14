@@ -81,7 +81,9 @@ class SSLWorld : public QObject {
         void addFieldArc(SSL_GeometryFieldSize* field, const string &name, float c_x, float c_y, float radius, float a1,
                 float a2, float thickness);
         void sendVisionBuffer();
+        int  robotIndex(int robot,int team);
         bool visibleInCam(int id, double x, double y);
+
         ConfigWidget* cfg;
         CGraphics* g;
         PWorld* p;
