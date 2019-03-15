@@ -843,15 +843,12 @@ SSLWorld::AmountOfCameras SSLWorld::getAmountOfCameras() {
 void SSLWorld::sendVisionBuffer()
 {
     int t = timer->elapsed();
-    int amountOfCameras = 10;
+    int amountOfCameras = 8;
     for (int i = 0; i < amountOfCameras; i++) {
-        std::cout << amountOfCameras+i << std::endl;
-
         sendQueue.push_back(new SendingPacket(generatePacket(i),t+i));
     }
 
-    while (t - sendQueue.front()->t>=cfg->sendDelay())
-    {
+    while (t - sendQueue.front()->t>=cfg->sendDelay()) {
         SSL_WrapperPacket *packet = sendQueue.front()->packet;
         delete sendQueue.front();
         sendQueue.pop_front();
