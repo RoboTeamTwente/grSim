@@ -301,7 +301,8 @@ SSLWorld::SSLWorld(QGLWidget* parent,ConfigWidget* _cfg,RobotsFormation *form1,R
         }
     }
     sendGeomCount = 0;
-    timer = new QTime();
+    QTime time=QTime::currentTime();
+    timer = &time;
     timer->start();
     in_buffer = new char [65536];
 }
