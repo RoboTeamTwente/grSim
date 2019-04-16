@@ -301,9 +301,7 @@ SSLWorld::SSLWorld(QGLWidget* parent,ConfigWidget* _cfg,RobotsFormation *form1,R
         }
     }
     sendGeomCount = 0;
-    QTime time=QTime::currentTime();
-    timer = &time;
-    timer->start();
+
     in_buffer = new char [65536];
 }
 
@@ -665,7 +663,7 @@ SSL_WrapperPacket* SSLWorld::generatePacket(int cam_id)
     ball->getBodyPosition(x,y,z);
     packet->mutable_detection()->set_camera_id(cam_id);
     packet->mutable_detection()->set_frame_number(framenum);
-    dReal t_elapsed = timer->elapsed()/1000.0;
+    dReal t_elapsed = QDateTime::currentMSecsSinceEpoch()/1000.0;
     packet->mutable_detection()->set_t_capture(t_elapsed);
     packet->mutable_detection()->set_t_sent(t_elapsed);
     dReal dev_x = cfg->noiseDeviation_x();
@@ -843,7 +841,7 @@ SSLWorld::AmountOfCameras SSLWorld::getAmountOfCameras() {
 
 void SSLWorld::sendVisionBuffer()
 {
-    int t = timer->elapsed();
+    int t = QDateTime::currentMSecsSinceEpoch();
     int amountOfCameras = 8;
     for (int i = 0; i < amountOfCameras; i++) {
         sendQueue.push_back(new SendingPacket(generatePacket(i),t+i));
