@@ -99,7 +99,6 @@ class SSLWorld : public QObject {
         QUdpSocket* blueStatusSocket, * yellowStatusSocket;
         bool updatedCursor;
         Robot* robots[MAX_ROBOT_COUNT*2];
-        QTime* timer;
         int sendGeomCount;
     public slots:
         void recvActions();
