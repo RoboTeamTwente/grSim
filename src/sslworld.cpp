@@ -394,38 +394,7 @@ void SSLWorld::step(dReal dt)
     if (customDT > 0)
         dt = customDT;
     g->initScene(m_parent->width(),m_parent->height(),0,0.7,1);//true,0.7,0.7,0.7,0.8);
-    for (int kk=0;kk<5;kk++)
-    {
-        const dReal* ballvel = dBodyGetLinearVel(ball->body);
-        dReal ballspeed = ballvel[0]*ballvel[0] + ballvel[1]*ballvel[1] + ballvel[2]*ballvel[2];
-        ballspeed = sqrt(ballspeed);
-        dReal ballfx=0,ballfy=0,ballfz=0;
-        dReal balltx=0,ballty=0,balltz=0;
-        dReal fk = cfg->BallFriction()*cfg->BallMass()*cfg->Gravity();
-        if (ballspeed!=0){
-        ballfx = - fk*ballvel[0]/ballspeed;
-        ballfy = - fk*ballvel[1]/ballspeed;
-        ballfz = - fk*ballvel[2]/ballspeed;
-        balltx = - ballfy*cfg->BallRadius();
-        ballty = ballfx*cfg->BallRadius();
-        }
-        else {
-            balltx=0;
-            ballty=0;
-            balltz=0;
-            ballfx=0;
-            ballfy=0;
-            ballfz=0;
-        }
-        balltz = 0;
-        dBodyAddTorque(ball->body, balltx, ballty, balltz);
-        dBodyAddForce(ball->body,ballfx,ballfy,ballfz);
-        if (dt==0) dt=last_dt;
-        else last_dt = dt;
-
-        selected = -1;
-        p->step(dt*0.2);
-    }
+    stepBall(dt,5);
 
 
     int best_k=-1;
@@ -492,7 +461,63 @@ void SSLWorld::step(dReal dt)
     sendVisionBuffer();
     framenum ++;
 }
+void SSLWorld::stepBall(dReal dt, int subSteps){
+    dReal fk = cfg->BallFriction()*cfg->BallMass()*cfg->Gravity();
+    for (int kk=0;kk<subSteps;kk++)
+    {
+        const dReal* ballvel = dBodyGetLinearVel(ball->body);
+        dReal ballspeed = ballvel[0]*ballvel[0] + ballvel[1]*ballvel[1] + ballvel[2]*ballvel[2];
+        ballspeed = sqrt(ballspeed);
 
+        const dReal* ballavel= dBodyGetAngularVel(ball->body);
+        double ballRadius=cfg->BallRadius();
+        dReal ballVelFromAngularX = ballavel[1]*ballRadius;
+        dReal ballVelFromAngularY = -ballavel[0]*ballRadius;
+        dReal velFroma = sqrt(ballVelFromAngularX*ballVelFromAngularX + ballVelFromAngularY*ballVelFromAngularY);
+//        dReal tolerance = 0.1;
+        const dReal* ballPos = dBodyGetPosition(ball->body);
+//        if(
+//            // ball is not flying?
+//                ballPos[2] <= cfg->BallRadius()+0.05 &&
+//                        // ball is not sliding?
+//                        ballspeed <= velFroma + tolerance &&
+//                        // ball rotates in moving direction?
+//                        ballvel[0]*ballVelFromAngularX>=0 &&
+//                        ballvel[1]*ballVelFromAngularY>=0)
+//        {
+//            dReal ballNewAvelX = ballavel[0] - cfg->BallFriction()* ballavel[0];
+//            dReal ballNewAvelY = ballavel[1] - cfg->BallFriction() * ballavel[1];
+//            dReal ballNewAvelZ = ballavel[2] - cfg->BallFriction() * ballavel[2];
+//            dBodySetAngularVel(ball->body, ballNewAvelX, ballNewAvelY, ballNewAvelZ);
+//        }
+        dReal ballfx=0,ballfy=0,ballfz=0;
+        dReal balltx=0,ballty=0,balltz=0;
+        if (ballspeed!=0){
+            ballfx = - fk*ballvel[0]/ballspeed;
+            ballfy = - fk*ballvel[1]/ballspeed;
+            ballfz = - fk*ballvel[2]/ballspeed;
+            balltx = - ballfy*cfg->BallRadius();
+            ballty = ballfx*cfg->BallRadius();
+        }
+        else {
+            balltx=0;
+            ballty=0;
+            balltz=0;
+            ballfx=0;
+            ballfy=0;
+            ballfz=0;
+        }
+        balltz = 0;
+        dBodyAddTorque(ball->body, balltx, ballty, balltz);
+        dBodyAddForce(ball->body,ballfx,ballfy,ballfz);
+        if (dt==0) dt=last_dt;
+        else last_dt = dt;
+
+        selected = -1;
+        p->step(dt*(1.0/subSteps));
+        std::cout<<"speed: "<<ballspeed<<" ang speed: "<<velFroma <<" height: "<<ballPos[2]<<" force: "<<ballfx/cfg->BallMass()<<"||"<<ballfy/cfg->BallMass()<<std::endl;
+    }
+}
 
 void SSLWorld::recvActions()
 {

@@ -72,6 +72,7 @@ class SSLWorld : public QObject {
         virtual ~SSLWorld();
         void glinit();
         void step(dReal dt = - 1);
+        void stepBall(dReal dt, int subSteps);
         SSL_WrapperPacket* generatePacket(int cam_id = 0);
         void addFieldLinesArcs(SSL_GeometryFieldSize* field);
         Vector2f* allocVector(float x, float y);
