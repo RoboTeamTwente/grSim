@@ -514,7 +514,7 @@ void SSLWorld::recvActions()
                 }
                 for (int i=0;i<packet.commands().robot_commands_size();i++)
                 {
-                    if (!packet.commands().robot_commands(i).has_id()) continue;
+                    if (packet.commands().robot_commands(i).id() < 0 || packet.commands().robot_commands(i).id() >15) continue;
                     int k = packet.commands().robot_commands(i).id();
                     int id = robotIndex(k, team);
                     if ((id < 0) || (id >= cfg->Robots_Count()*2)) continue;
