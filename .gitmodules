@@ -1,0 +1,3 @@
+[submodule "vartypes"]
+	path = vartypes
+	url = https://github.com/jpfeltracco/vartypes.git

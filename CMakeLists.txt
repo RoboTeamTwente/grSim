@@ -90,15 +90,15 @@ option(DOUBLE_PRECISION "Use double precision? If not single precision will be u
 
 
 set(CMAKE_AUTOMOC OFF)
-add_subdirectory(lib/vartypes)
+add_subdirectory(vartypes)
 set(CMAKE_AUTOMOC ON)
 
-include_directories(lib/vartypes)
-include_directories(lib/vartypes/)
-include_directories(lib/vartypes/vartypes/)
-include_directories(lib/vartypes/vartypes/gui/)
-include_directories(lib/vartypes/vartypes/primitives/)
-include_directories(lib/vartypes/vartypes/xml/)
+include_directories(vartypes)
+include_directories(vartypes/)
+include_directories(vartypes/vartypes/)
+include_directories(vartypes/vartypes/gui/)
+include_directories(vartypes/vartypes/primitives/)
+include_directories(vartypes/vartypes/xml/)
 
 list(APPEND libs vartypes)
 

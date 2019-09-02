@@ -31,15 +31,15 @@ Copyright (C) 2011, Parsian Robotic Center (eew.aut.ac.ir/~parsian/grsim)
 #include <stdio.h>
 #include <memory>
 
-#include <lib/vartypes/vartypes/primitives/VarType.h>
-#include <lib/vartypes/vartypes/primitives/VarList.h>
-#include <lib/vartypes/vartypes/primitives/VarBool.h>
-#include <lib/vartypes/vartypes/primitives/VarDouble.h>
-#include <lib/vartypes/vartypes/primitives/VarInt.h>
-#include <lib/vartypes/vartypes/primitives/VarStringEnum.h>
+#include <vartypes/vartypes/primitives/VarType.h>
+#include <vartypes/vartypes/primitives/VarList.h>
+#include <vartypes/vartypes/primitives/VarBool.h>
+#include <vartypes/vartypes/primitives/VarDouble.h>
+#include <vartypes/vartypes/primitives/VarInt.h>
+#include <vartypes/vartypes/primitives/VarStringEnum.h>
 
-#include <lib/vartypes/vartypes/gui/VarTreeView.h>
-#include <lib/vartypes/vartypes/gui/VarTreeModel.h>
+#include <vartypes/vartypes/gui/VarTreeView.h>
+#include <vartypes/vartypes/gui/VarTreeModel.h>
 
 using namespace VarTypes;
 
