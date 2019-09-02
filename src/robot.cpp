@@ -17,6 +17,7 @@ Copyright (C) 2011, Parsian Robotic Center (eew.aut.ac.ir/~parsian/grsim)
 */
 
 #include "robot.h"
+#include <iostream>
 
 // ang2 = position angle
 // ang  = rotation angle
