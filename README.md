@@ -32,7 +32,6 @@ grSim compiles on Linux (tested on Ubuntu variants only) and Mac OS. It depends 
 - [OpenGL](https://www.opengl.org)
 - [Qt4 Development Libraries](https://www.qt.io) version 4.8+
 - [Open Dynamics Engine (ODE)](http://www.ode.org)
-- [VarTypes Library](https://github.com/szi/vartypes)
 - [Google Protobuf](https://github.com/google/protobuf)
 - [Boost development libraries](http://www.boost.org/) (needed by VarTypes)
 
@@ -45,6 +44,8 @@ Receiving data from grSim is similar to receiving data from [SSL-Vision](https:/
 Sending data to the simulator is also possible using Google Protobuf. Sample clients are included in [clients](./clients) folder. There are two clients available, *qt-based* and *Java-based*. The native client is compiled during the grSim compilation. To compile the Java client, please consult the corresponding `README` file.
 
 Qt [example project](https://github.com/robocin/ssl-client) to receive and send data to the simulator.
+
+build the submodules! git clone [url] --recurse-submodules
 
 
 Citing
