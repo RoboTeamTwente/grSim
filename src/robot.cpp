@@ -182,8 +182,8 @@ void Robot::Kicker::kick(dReal kickspeedx, dReal kickspeedz) {
 
     // Rotate the direction of the robot with the angle of the kicker to get the directional vector of the ball
     dReal dxx, dyy, dzz;
-    dxx = dx*cos(- angle) - dy*sin(- angle);
-    dyy = dx*sin(- angle) + dy*cos(- angle);
+    dxx = dx;
+    dyy = dy;
     dzz = dz;
 
     if (isTouchingBall()) {
