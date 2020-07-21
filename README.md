@@ -11,17 +11,6 @@ grSim-[![Build Status](https://travis-ci.org/RoboCup-SSL/grSim.svg?branch=master
 - [Changelog](CHANGELOG.md)
 - License: [GNU General Public License (GPLv3)](LICENSE.md)
 
-System Requirements
------------------------
-
-grSim will likely run on a modern dual core PC with a decent graphics card. Typical configuration is:
-
-- Dual Core CPU (2.0 Ghz+)
-- 1GB of RAM
-- 256MB nVidia or ATI graphics card
-
-Note that it may run on lower end equipment though good performance is not guaranteed.
-
 
 Software Requirements
 ---------------------
