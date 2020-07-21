@@ -6,7 +6,7 @@ grSim-[![Build Status](https://travis-ci.org/RoboCup-SSL/grSim.svg?branch=master
 
 ![grSim on Ubuntu](docs/img/screenshot01.jpg?raw=true "grSim on Ubuntu")
 
-- [Install instructions](INSTALL.md)
+- [Install instructions](INSTALL.md) Note: skip the step where you clone their GRSim repo, as you need to clone this repo instead. 
 - [Authors](AUTHORS.md)
 - [Changelog](CHANGELOG.md)
 - License: [GNU General Public License (GPLv3)](LICENSE.md)
