@@ -6,21 +6,10 @@ grSim-[![Build Status](https://travis-ci.org/RoboCup-SSL/grSim.svg?branch=master
 
 ![grSim on Ubuntu](docs/img/screenshot01.jpg?raw=true "grSim on Ubuntu")
 
-- [Install instructions](INSTALL.md)
+- [Install instructions](INSTALL.md) Note: skip the step where you clone their GRSim repo, as you need to clone this repo instead. 
 - [Authors](AUTHORS.md)
 - [Changelog](CHANGELOG.md)
 - License: [GNU General Public License (GPLv3)](LICENSE.md)
-
-System Requirements
------------------------
-
-grSim will likely run on a modern dual core PC with a decent graphics card. Typical configuration is:
-
-- Dual Core CPU (2.0 Ghz+)
-- 1GB of RAM
-- 256MB nVidia or ATI graphics card
-
-Note that it may run on lower end equipment though good performance is not guaranteed.
 
 
 Software Requirements
