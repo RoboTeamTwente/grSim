@@ -180,23 +180,17 @@ void Robot::Kicker::kick(dReal kickspeedx, dReal kickspeedz) {
     dz = 0;
     dReal zf = kickspeedz;
 
-    // Rotate the direction of the robot with the angle of the kicker to get the directional vector of the ball
-    dReal dxx, dyy, dzz;
-    dxx = dx*cos(- angle) - dy*sin(- angle);
-    dyy = dx*sin(- angle) + dy*cos(- angle);
-    dzz = dz;
-
     if (isTouchingBall()) {
-        dReal dlen = dxx*dxx + dyy*dyy + dzz*dzz;
+        dReal dlen = dx*dx + dy*dy + dz*dz;
         dlen = sqrt(dlen);
-        vx = dxx*kickspeedx/dlen;
-        vy = dyy*kickspeedx/dlen;
+        vx = dx*kickspeedx/dlen;
+        vy = dy*kickspeedx/dlen;
         vz = zf;
         const dReal* vball = dBodyGetLinearVel(rob->getBall()->body);
-        dReal vn = - (vball[0]*dxx + vball[1]*dyy)*rob->cfg->robotSettings.KickerDampFactor;
-        dReal vt = - (vball[0]*dyy - vball[1]*dxx);
-        vx += vn*dxx - vt*dyy;
-        vy += vn*dyy + vt*dxx;
+        dReal vn = - (vball[0]*dx + vball[1]*dy)*rob->cfg->robotSettings.KickerDampFactor;
+        dReal vt = - (vball[0]*dy - vball[1]*dx);
+        vx += vn*dx - vt*dy;
+        vy += vn*dy + vt*dx;
         dBodySetLinearVel(rob->getBall()->body, vx, vy, vz);
     }
     kicking = true;
